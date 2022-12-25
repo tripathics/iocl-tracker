@@ -18,7 +18,7 @@ const theme = createTheme();
 
 export function SignIn() {
   const handleSubmit = (event) => {
-    event.preventDefault();
+    // event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
       email: data.get('email'),
@@ -39,16 +39,14 @@ export function SignIn() {
             alignItems: 'center',
           }}
         >
-          {/* <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}> */}
-            <img src={logo} style={{width:"50px" ,height:"auto"}} alt=""></img>
-          {/* </Avatar> */}
+          <img src={logo} style={{width:"50px" ,height:"auto"}} alt=""></img>
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <TextField
               margin="normal"
-              required
+              required={true}
               fullWidth
               id="email"
               label="Email Address"
@@ -58,7 +56,7 @@ export function SignIn() {
             />
             <TextField
               margin="normal"
-              required
+              required={true}
               fullWidth
               name="password"
               label="Password"

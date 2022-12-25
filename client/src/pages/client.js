@@ -26,7 +26,7 @@ const VehicleSelect = ({ vehicle, handleSetVehicle }) => {
         {vehicles.map((vehicle, i) => {
           return (
             <li key={i}>
-              <button onClick={e => { handleSetVehicle(vehicle._id) }}>Select {vehicle.vehicleId}</button>
+              <button onClick={e => { handleSetVehicle(vehicle._id) }}>{vehicle.vehicleNo}</button>
             </li>
           )
         })}

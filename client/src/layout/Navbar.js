@@ -34,9 +34,7 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       color: "gray",
       border:"2px solid black",
-      
       //borderBottom: "1px solid white",
-      
     },
   },
 
@@ -46,11 +44,20 @@ const useStyles = makeStyles((theme) => ({
  
 }));
 
+
+const navItems = [
+  { name: 'Home', url: '/' },
+  { name: 'Client', url: '/client' },
+  { name: 'Register', url: '/register' },
+  { name: 'Sign in', url: '/login' },
+]
+
 export function Navbar() {
   const classes = useStyles();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const user=undefined
+
 
   return (
     <AppBar position="static" className="navComponent"   style={{ backgroundColor: "#FFFF" }} >
@@ -60,31 +67,13 @@ export function Navbar() {
         <img src={logo} style={{width:"200px" ,height:"auto"}} alt=""></img>
         </Typography>
         {isMobile ? (
-          <DrawerComponent />
+          <DrawerComponent navItems={navItems} />
         ) : (
           <div className={classes.navlinks}>
-            <Link to="/" className={classes.link}>
-              Home
-            </Link>
-            <Link to="/about" className={classes.link}>
-              About
-            </Link>
-            <Link to="/contact" className={classes.link}>
-              Contact
-            </Link>
-            <Link to="/faq" className={classes.link}>
-              FAQ
-            </Link>
-            {user && <>
-            <Link to="/faq" className={classes.link}>
-                <PersonIcon/>
-            </Link>
-             </>}
-
-             <Link to ="/signup" className={classes.link}>
-              SignUp
-             </Link>
-            
+            {navItems.map((item, i) => (
+              <Link key={i} to={item.url} className={classes.link}>{item.name}</Link>
+            ))}
+            {user && <PersonIcon/>}            
           </div>
         )}
       </Toolbar>

@@ -50,7 +50,7 @@ export  function SignUp() {
                 <TextField
                   autoComplete="given-name"
                   name="firstName"
-                  required
+                  required={true}
                   fullWidth
                   id="firstName"
                   label="First Name"
@@ -59,7 +59,7 @@ export  function SignUp() {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  required
+                  required={true}
                   fullWidth
                   id="lastName"
                   label="Last Name"
@@ -69,7 +69,7 @@ export  function SignUp() {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  required
+                  required={true}
                   fullWidth
                   id="email"
                   label="Email Address"
@@ -79,7 +79,7 @@ export  function SignUp() {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  required
+                  required={true}
                   fullWidth
                   name="password"
                   label="Password"
