@@ -1,4 +1,5 @@
 import { React, useState, useEffect } from "react";
+import LayoutComponent from "../layout/layoutcomponent"
 
 const Client = () => {
     const [location, setLocation] = useState(null);
@@ -10,15 +11,17 @@ const Client = () => {
                 console.log(location);
             }
         })
-    }, [location])
+    }, [])
 
     return (
-        <>
+        <>  <LayoutComponent>
             <h2>Hello client</h2>
             {location && (
                 <h3>{location.latitude} {location.longitude}</h3>
             )}
             <a href="/">Back to home</a>
+
+            </LayoutComponent>
         </>
     )
 }
