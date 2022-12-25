@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import { React, useState, useEffect } from 'react'
+import LayoutComponent from "../layout/layoutcomponent"
 
 const VehicleSelect = ({ vehicle, handleSetVehicle }) => {
   const [vehicles, setVehicles] = useState([]);
@@ -67,6 +68,7 @@ const Client = () => {
   }, [pos, currentVehicle])
 
   return (
+    <LayoutComponent>
     <div className='client-component'>
       <h1>Client</h1>
       <div>
@@ -76,6 +78,7 @@ const Client = () => {
       </div>
       <VehicleSelect handleSetVehicle={setCurrentVehicle} vehicle={currentVehicle} />
     </div>
+    </LayoutComponent>
   )
 }
 

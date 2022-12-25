@@ -1,5 +1,6 @@
 import React from "react"
 import { useJsApiLoader, GoogleMap } from "@react-google-maps/api"
+import LayoutComponent from "../layout/layoutcomponent"
 
 const Admin = () => {
   const center = { lat: 48.8584, lng: 2.2945 }
@@ -18,6 +19,7 @@ const Admin = () => {
 
   return (
     <>
+      <LayoutComponent>
       <h1>Vehicles live</h1>
       <a href="/">Back to home</a>
       <div style={{ height: "80vh" }}>
@@ -26,6 +28,7 @@ const Admin = () => {
         }}>
         </GoogleMap>
       </div>
+      </LayoutComponent>
     </>
   )
 }
