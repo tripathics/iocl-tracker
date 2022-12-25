@@ -7,6 +7,7 @@ const dbo = require('./db/conn');
 app.use(cors());
 app.use(express.json());
 
+app.use(require('./routes/record'));
 
 const port = process.env.PORT || 5000;
 

@@ -5,6 +5,7 @@ const client = new MongoClient(Db, {
   useUnifiedTopology: true,
 });
 
+/** @type {import('mongodb').Db} */
 var _db;
 
 module.exports = {
