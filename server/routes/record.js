@@ -20,7 +20,7 @@ tracksRoutes.route('/vehicles/:id').get((req, res) => {
   let query = { _id: ObjectId(req.params.id) };
   db_connect
     .collection('vehicles')
-    .fintOne(query, (err, result) => {
+    .findOne(query, (err, result) => {
       if (err) throw err;
       res.json(result);
     })
@@ -54,6 +54,5 @@ tracksRoutes.route("/update/:id").post(function (req, response) {
       response.json(res);
     });
 });
-
 
 module.exports = tracksRoutes
