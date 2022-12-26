@@ -19,6 +19,5 @@ userRoutes.route('/users/add').post(function (req, res) {
 })
 
 // sign in
-userRoutes.route('/')
 
 module.exports = userRoutes

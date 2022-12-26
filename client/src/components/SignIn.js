@@ -19,7 +19,7 @@ const theme = createTheme();
 export function SignIn() {
 
   const checkUser = async(user)=>{
-    const response = await fetch('http://192.168.26.39/users/check',{
+    const response = await fetch('http://192.168.26.39/users/login',{
     method: 'POST',
     body: JSON.stringify(user),
     headers:{
