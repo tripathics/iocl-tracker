@@ -21,12 +21,12 @@ const VehicleSelect = ({ vehicle, handleSetVehicle }) => {
 
   return (
     <div className='vehicle-select-form'>
-      <h4>Enter your vehicle</h4>
       {!vehicle && (<>
+        <h4>Enter your vehicle</h4>
         {vehicles.map((vehicle, i) => {
           return (
             <li key={i}>
-              <button onClick={e => { handleSetVehicle(vehicle._id) }}>Select {vehicle.vehicleId}</button>
+              <button onClick={e => { handleSetVehicle(vehicle._id) }}>{vehicle.vehicleNo}</button>
             </li>
           )
         })}
@@ -45,7 +45,7 @@ const Client = () => {
     const pushCurrPos = async () => {
       await fetch(`http://192.168.26.39:5000/update/${currentVehicle}`, {
         method: "POST",
-        body: JSON.stringify({pos: pos}),
+        body: JSON.stringify({ pos: pos }),
         headers: {
           'Content-Type': 'application/json'
         },
@@ -58,8 +58,10 @@ const Client = () => {
         console.log(pos.timestamp, ': ', pos.coords.longitude, pos.coords.latitude);
         setPos({
           timestamp: pos.timestamp,
-          lat: pos.coords.latitude,
-          lng: pos.coords.longitude
+          coords: {
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude
+          }
         })
 
         if (currentVehicle) pushCurrPos();
@@ -69,15 +71,17 @@ const Client = () => {
 
   return (
     <LayoutComponent>
-    <div className='client-component'>
-      <h1>Client</h1>
-      <div>
+      <div className='client-component'>
+        <h1>Client</h1>
         {pos && (
-          <p>Last updated: {pos.timestamp}</p>
+          <div>
+            <p>Vehicle: {currentVehicle}</p>
+            <p>Last updated: {pos.timestamp}</p>
+            <p>Last updated: {pos.coords.lng}, {pos.coords.lat}</p>
+          </div>
         )}
+        <VehicleSelect handleSetVehicle={setCurrentVehicle} vehicle={currentVehicle} />
       </div>
-      <VehicleSelect handleSetVehicle={setCurrentVehicle} vehicle={currentVehicle} />
-    </div>
     </LayoutComponent>
   )
 }
