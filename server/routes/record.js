@@ -4,6 +4,7 @@ const dbo = require('../db/conn');
 
 const ObjectId = require('mongodb').ObjectId;
 
+
 tracksRoutes.route('/vehicles').get((req, res) => {
   let db_connect = dbo.getDb('iocldb');
   db_connect
@@ -37,6 +38,16 @@ tracksRoutes.route('/vehicles/add').post((req, res) => {
     });
 });
 
+tracksRoutes.route('users/add').post((req,res) =>{
+  let db_connect=dbo.getDb('iocldb');
+  let newUser = req.body;
+
+  db_connect 
+    .collection('users').insertOne(newUser,(err,result)=>{
+      if(err) throw err;
+      res.json(result)
+    })
+})
 // This section will help you update a record by id.
 tracksRoutes.route("/update/:id").post(function (req, response) {
   let db_connect = dbo.getDb();

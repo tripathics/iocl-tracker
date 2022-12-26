@@ -13,9 +13,10 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import logo from '../media/logo2.png'
 import LayoutComponent from "../layout/layoutcomponent"
 
-
 const theme = createTheme()
 export function Registration() {
+
+  
 
   const addVehicle = async (vehicle) => {
     const response = await fetch('http://192.168.26.39:5000/vehicles/add', {
@@ -41,6 +42,7 @@ export function Registration() {
       password: data.get('password'),
     }
 
+
     addVehicle(newVehicle);
 
 
@@ -52,6 +54,8 @@ export function Registration() {
       password: data.get('password'),
     });
   };
+
+   
 
   return (
 
@@ -78,10 +82,10 @@ export function Registration() {
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
 
-                    <TextField
+                    <TextField 
                       autoComplete="Vehicle Number"
                       name="vehicleNo"
-                      required={true}
+                      required
                       fullWidth
                       id="vehicleNo"
                       label="Vehicle Registration Number"

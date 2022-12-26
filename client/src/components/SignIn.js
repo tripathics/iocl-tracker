@@ -17,13 +17,27 @@ import LayoutComponent from "../layout/layoutcomponent"
 const theme = createTheme();
 
 export function SignIn() {
+
+  const checkUser = async(user)=>{
+    const response = await fetch('http://192.168.26.39/users/check',{
+    method: 'POST',
+    body: JSON.stringify(user),
+    headers:{
+      'Content-type' :'application/json'
+    },
+
+    })
+
+    if(!response.ok) alert(`An error occured ${response.statusText}`);
+  }
   const handleSubmit = (event) => {
-    // event.preventDefault();
+    event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
+    const user={
       email: data.get('email'),
       password: data.get('password'),
-    });
+    }
+    checkUser(user);
   };
 
   return (
