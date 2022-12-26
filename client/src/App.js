@@ -4,6 +4,8 @@ import {SignIn} from './components/SignIn'
 import {SignUp} from './components/SignUp'
 
 import './styles/index.scss'
+// test
+import TestComp from "./test/FormComp"
 
 function App() {
   return (
@@ -23,6 +25,10 @@ function App() {
         } />        
         <Route exact path="/signup" element={
           <SignUp/>
+        } />
+
+        <Route exact path='/test' element={
+          <TestComp />
         } />
       </Routes>
     </BrowserRouter>
