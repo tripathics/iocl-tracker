@@ -1,0 +1,113 @@
+body{
+    font-family: "Lucida Sans Unicode", serif;
+    
+    /*background-image: url('C:\Users\Lenovo\OneDrive\Desktop\iocl\background.jpg');*/
+    background-image: url("background.jpg");
+    background-repeat: no-repeat;
+    background-size:cover;
+    background-position:relative;
+    z-index:1;
+    
+
+
+}
+h1{
+  color:#f0f6f6;
+  z-index:999;
+  text-align: center;
+  position:absolute;
+  bottom:500px;
+  right:620px;
+  text-decoration-line: underline;
+  text-decoration-color: #f0f6f6;
+  text-decoration-style: solid;
+  text-shadow: 3px 3px  rgba(195, 200, 203, 0.792);
+  font-family:Arial, Helvetica, sans-serif;
+}
+
+.button{
+
+    background-color: #f8f9f9;
+    border:4px solid grey ;
+    color: rgba(138, 160, 229, 0.868);
+    padding: 14px 40px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 24px;
+    margin: 4px 2px;
+    cursor: pointer;
+    position:absolute;
+|   z-index:999;
+  border-radius:12px;
+  transition-duration:0.4s;
+  right:650px;
+  bottom:400px;
+
+  
+}
+.button:hover{
+  background-color: bisque;
+  color:rgba(138, 160, 229, 0.868);
+}
+.button2{
+  background-color: #f8f9f9;
+    border:4px solid grey ;
+    color: rgba(138, 160, 229, 0.868);
+    padding: 14px 40px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 24px;
+    margin: 4px 2px;
+    cursor: pointer;
+    position:absolute;
+|   z-index:999;
+  border-radius:12px;
+  transition-duration:0.4s;
+  right:650px;
+  bottom:300px;
+
+
+}
+.button2:hover{
+  background-color: bisque;
+  color:rgba(138, 160, 229, 0.868);
+}
+img{
+  right:50px;
+  top:50px;
+  opacity: 0.5;
+  position:absolute;
+
+}
+.head{
+  width: 1415px;
+  padding: 10px;
+  border: 5px solid gray;
+  margin: 1px;
+  z-index:999;
+  position:absolute;
+  top:0px;
+  left:0px;
+  color:#f8f9f9;
+}
+.btn{
+  background-color: #f8f9f9;
+    border:4px solid grey ;
+    color: rgba(138, 160, 229, 0.868);
+    padding: 14px 40px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 24px;
+    margin: 4px 2px;
+    cursor: pointer;
+    position:absolute;
+|   z-index:999;
+  border-radius:12px;
+  transition-duration:0.4s;
+  right:650px;
+  bottom:300px;
+
+}
