@@ -115,6 +115,17 @@ export function SignUp() {
                     />
                   </Grid>
                   <Grid item xs={12}>
+                    <TextField
+                      required={true}
+                      fullWidth
+                      name="confirmPassword"
+                      label="Confirm Password"
+                      type="password"
+                      id="confirmPassword"
+                      autoComplete="new-password"
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
                     <FormControlLabel
                       control={<Checkbox value="allowExtraEmails" color="primary" />}
                       label="By signing this document, you agree to the terms and conditions."
