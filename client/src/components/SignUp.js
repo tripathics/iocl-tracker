@@ -17,7 +17,7 @@ const theme = createTheme();
 export function SignUp() {
 
   const addUser = async (driver) => {
-    const response = await fetch('http://192.168.26.39:5000/users/add', {
+    const response = await fetch('http://192.168.26.39:5000/users/register', {
       method: 'POST',
       body: JSON.stringify(driver),
       headers: {
@@ -35,6 +35,7 @@ export function SignUp() {
       name: data.get('firstName'),
       email: data.get('email'),
       password: data.get('password'),
+      password2: data.get('confirmPassword'),
     }
     addUser(newUser)
   };
@@ -100,7 +101,17 @@ export function SignUp() {
                       label="Password"
                       type="password"
                       id="password"
-                      autoComplete="new-password"
+                    />
+                  </Grid>
+
+                  <Grid item xs={12}>
+                    <TextField
+                      required={true}
+                      fullWidth
+                      name="confirmPassword"
+                      label="Confirm Password"
+                      type="password"
+                      id="confirmPassword"
                     />
                   </Grid>
                   <Grid item xs={12}>
