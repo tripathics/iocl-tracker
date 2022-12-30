@@ -4,9 +4,10 @@ import {
   IconButton,
   List,
   ListItem,
-  ListItemText,
-  makeStyles
-} from "@material-ui/core";
+  ListItemText
+} from "@mui/material";
+
+import { makeStyles } from '@mui/styles'
 import MenuIcon from '@mui/icons-material/Menu';
 
 import { Link } from "react-router-dom";

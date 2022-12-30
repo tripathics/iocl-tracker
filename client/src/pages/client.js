@@ -1,12 +1,12 @@
 import { React, useState, useEffect } from 'react'
-import LayoutComponent from "../layout/layoutcomponent"
+import config from '../config/config';
 
 const VehicleSelect = ({ vehicle, handleSetVehicle }) => {
   const [vehicles, setVehicles] = useState([]);
 
   useEffect(() => {
     const getVehicles = async () => {
-      const response = await fetch(`http://192.168.26.39:5000/vehicles`);
+      const response = await fetch(`${config.API_BASE_URL}/vehicles`);
       if (!response.ok) {
         const message = response.statusText;
         alert(`An error occured: ${message}`);
@@ -43,7 +43,7 @@ const Client = () => {
   useEffect(() => {
     // update location on db
     const pushCurrPos = async () => {
-      await fetch(`http://192.168.26.39:5000/update/${currentVehicle}`, {
+      await fetch(`${config.API_BASE_URL}/update/${currentVehicle}`, {
         method: "POST",
         body: JSON.stringify({ pos: pos }),
         headers: {
@@ -70,7 +70,7 @@ const Client = () => {
   }, [pos, currentVehicle])
 
   return (
-    <LayoutComponent>
+    <>
       <div className='client-component'>
         <h1>Client</h1>
         {pos && (
@@ -82,7 +82,7 @@ const Client = () => {
         )}
         <VehicleSelect handleSetVehicle={setCurrentVehicle} vehicle={currentVehicle} />
       </div>
-    </LayoutComponent>
+    </>
   )
 }
 

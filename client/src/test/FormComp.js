@@ -1,10 +1,9 @@
-import { Box, Button, TextField } from '@material-ui/core'
+import { Box, Button, TextField } from '@mui/material'
 import React from 'react'
-import LayoutComponent from '../layout/layoutcomponent'
 
 const TestComp = () => {
   return (
-    <LayoutComponent>
+    <>
       <div style={{
         width: "100%",
         maxWidth: "640px",
@@ -18,7 +17,7 @@ const TestComp = () => {
         </Box>
         
       </div>
-    </LayoutComponent>
+    </>
   )
 }
 

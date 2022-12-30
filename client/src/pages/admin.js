@@ -1,14 +1,13 @@
-import { React, useEffect, useState } from "react"
+import { React, useState } from "react"
 import { useJsApiLoader, GoogleMap, Marker } from "@react-google-maps/api"
-import LayoutComponent from "../layout/layoutcomponent"
+import config from '../config/config'
 
 const Admin = () => {
   const [vehicles, setVehicles] = useState([]);
-  const [map, setMap] = useState(null);
 
   const fetchVehicles = async () => {
     console.log('Fetching vehicles...')
-    const response = await fetch('http://192.168.26.39:5000/vehicles');
+    const response = await fetch(`${config.API_BASE_URL}/vehicles`);
     if (!response.ok) {
       alert(`An error occured: ${response.statusText}`)
       return;
@@ -21,7 +20,7 @@ const Admin = () => {
   const center = { lat: 26.182808644471546, lng: 91.80385223005672 }
 
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: "AIzaSyDz9cjpAun4rIs4B00tsYndFRPYOLUVoFc",
+    googleMapsApiKey: config.GOOGLE_MAPS_API_KEY,
   })
 
   if (!isLoaded) {
@@ -33,7 +32,7 @@ const Admin = () => {
   }
 
   return (
-    <LayoutComponent>
+    <>
       {!isLoaded ? (<div style={{
         width: "fit-content",
         margin: "auto",
@@ -51,7 +50,7 @@ const Admin = () => {
             mapContainerStyle={{
               width: "100%", height: "100%", minHeight: "inherit"
             }}
-            onLoad={map => { setMap(map); fetchVehicles(); }}
+            onLoad={map => { console.log(`Map loaded`); fetchVehicles(); }}
           >
             {vehicles.map((vehicle, i) => (
               <Marker key={i}
@@ -62,7 +61,7 @@ const Admin = () => {
           </GoogleMap>
         </div>
       )}
-    </LayoutComponent>
+    </>
   )
 }
 
