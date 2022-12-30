@@ -3,6 +3,7 @@ const userRoutes = express.Router();
 const { getDbCollection, findUserByToken } = require('../helpers/helpers');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { ObjectID } = require('bson');
 const SECRET = process.env.JWT_SECRET;
 
 // Register a new user
@@ -46,6 +47,7 @@ userRoutes.route('/users/register').post((req, res) => {
 // sign in
 userRoutes.route('/users/login').post((req, res) => {
   let token = req.cookies.auth;
+
   findUserByToken(token, (err, user) => {
     if (err) return res(err);
     if (user) return res.status(400).json({ error: true, message: 'You are already logged in' });
@@ -59,21 +61,57 @@ userRoutes.route('/users/login').post((req, res) => {
             if (!isMatch) return res.json({ isAuth: false, message: "Password mismatched" });
 
             // generate token
-            var token = jwt.sign(user._id.toHexString(), SECRET);
-            users.updateOne({_id: user._id}, {
-              $set: { token: token }
-            }).then(result => {
-              res.cookie('auth', user.token).json({
-                isAuth: true, 
-                id: user._id,
-                email: user.email
+            let jwtToken = jwt.sign({token: user._id.toHexString()}, SECRET, { expiresIn: 60 * 60 });
+
+            let query = { _id: ObjectID(user._id) };
+            let newvalues = {
+              $set: { token: jwtToken },
+            };
+
+            users.updateOne(query, newvalues).then(result => {
+              console.log(result);
+              res.cookie('auth', jwtToken, { maxAge: 3600 * 1000 }).json({
+                isAuth: true, id: user._id, email: user.email
               });
             })
-            .catch(err => res.status(400).send(err))
+              .catch(err => res.status(400).send(err));
           })
         })
       })
     }
+  })
+})
+
+// sign out
+userRoutes.route('/users/logout').get((req, res) => {
+  let token = req.cookies.auth;
+  findUserByToken(token, (err, user) => {
+    if (err) throw err;
+    if (!user) return res.status(400).json({ error: true });
+
+    // if user found, clear token from db
+    getDbCollection('users', users => {
+      const newValues = { $unset: { token: 1 } }
+      const query = { _id: ObjectID(user._id) }
+      users.updateOne(query, newValues).then(result => {
+        console.log(result);
+        res.sendStatus(200);
+      }).catch(err => {
+        res.status(400).send(err);
+      })
+    })
+  })
+})
+
+// check authorized
+userRoutes.route('/users/auth').post((req, res) => {
+  let token = req.cookies.auth;
+
+  findUserByToken(token, (err, user) => {
+    if (err) return res(err);
+    if (!user) return res.status(401).json({ isAuth: false, message: 'Unauthorized' });
+
+    return res.status(200).json({ isAuth: true, message: 'success' });
   })
 })
 

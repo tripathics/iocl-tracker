@@ -1,46 +1,38 @@
 import * as React from 'react';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
+
+import {
+  Button, CssBaseline, TextField, FormControlLabel, Checkbox, Link,
+  Typography, Container, Grid, Box
+} from "@mui/material"
+
 import logo from "../media/logo2.png"
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import LayoutComponent from "../layout/layoutcomponent"
+import { loginUser } from '../helpers/helpers'
+import { useNavigate } from 'react-router-dom';
 
 const theme = createTheme();
 
 export function SignIn() {
+  const history = useNavigate();
 
-  const checkUser = async (user) => {
-    const response = await fetch('http://192.168.26.39:5000/users/login', {
-      method: 'POST',
-      body: JSON.stringify(user),
-      credentials: "same-origin",
-      headers: {
-        'Content-type': 'application/json'
-      },
-    })
-
-    if (!response.ok) alert(`An error occured ${response.statusText}`);
-  }
   const handleSubmit = (event) => {
     event.preventDefault();
+    // logout the user if already logged in
     const data = new FormData(event.currentTarget);
     const user = {
       email: data.get('email'),
       password: data.get('password'),
     }
-    checkUser(user);
+
+    loginUser(user).then(res => {
+      if (res.isAuth) history('/admin');
+      else history('/');
+    })
+    .catch(err => {throw err});
   };
 
   return (
-    <LayoutComponent>
+    <>
       <ThemeProvider theme={theme}>
         <Container component="main" maxWidth="xs">
           <CssBaseline />
@@ -105,7 +97,7 @@ export function SignIn() {
           </Box>
         </Container>
       </ThemeProvider>
-    </LayoutComponent>
+    </>
   );
 }
 

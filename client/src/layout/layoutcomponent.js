@@ -1,11 +1,13 @@
 import React from 'react'
 import Navbar from './Navbar'
+import MyNavComponent from './Nav'
 import Footer from './Footer'
 
-const LayoutComponent = ({ children }) => {
+const LayoutComponent = ({ children, user }) => {
   return (
     <div className='layout-component'>
-        <Navbar />
+        {/* <Navbar /> */}
+        <MyNavComponent user={user}/>
         <main className='main-component-wrapper'>
             {children}
         </main>

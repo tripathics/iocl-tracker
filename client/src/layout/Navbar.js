@@ -5,10 +5,12 @@ import {
   Toolbar,
   CssBaseline,
   Typography,
-  makeStyles,
   useTheme,
   useMediaQuery,
-} from "@material-ui/core";
+  createTheme,
+} from "@mui/material";
+
+import { makeStyles } from '@mui/styles'
 
 import { Link } from "react-router-dom";
 import DrawerComponent from "../components/DrawerComponent";
@@ -17,7 +19,7 @@ import PersonIcon from '@mui/icons-material/Person';
 
 const useStyles = makeStyles((theme) => ({
   navlinks: {
-    marginLeft: theme.spacing(2),
+    // marginLeft: theme.spacing(2),
     display: "flex",
   },
   logo: {
@@ -27,23 +29,22 @@ const useStyles = makeStyles((theme) => ({
   link: {
     textDecoration: "none",
     color: "black",
-    padding:"5px",
-    borderRadius:"1.3rem",
+    padding: "5px",
+    borderRadius: "1.3rem",
     fontSize: "16px",
-    marginLeft: theme.spacing(20),
+    // marginLeft: theme.spacing(20),
     "&:hover": {
       color: "gray",
-      border:"2px solid black",
+      border: "2px solid black",
       //borderBottom: "1px solid white",
     },
   },
 
   toolbar: {
-    backgroundColor:"pink"
+    backgroundColor: "pink"
   }
- 
-}));
 
+}));
 
 const navItems = [
   { name: 'Home', url: '/' },
@@ -56,24 +57,27 @@ export function Navbar() {
   const classes = useStyles();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  const user=undefined
+  const user = true
 
 
   return (
-    <AppBar position="static" className="navComponent"   style={{ backgroundColor: "#FFFF" }} >
-      <CssBaseline  />
+    <AppBar position="static" className="navComponent" style={{ backgroundColor: "#FFFF" }} >
+      <CssBaseline />
       <Toolbar>
-        <Typography variant="h5" className={classes.logo}> 
-        <img src={logo} style={{width:"200px" ,height:"auto"}} alt=""></img>
+        {/* <Typography variant="h5" className={classes.logo}> */}
+        <Typography variant="h5">
+          <img src={logo} style={{ width: "200px", height: "auto" }} alt="" />
         </Typography>
         {isMobile ? (
           <DrawerComponent navItems={navItems} />
         ) : (
-          <div className={classes.navlinks}>
+          // <div className={classes.navlinks}>
+          <div>
             {navItems.map((item, i) => (
-              <Link key={i} to={item.url} className={classes.link}>{item.name}</Link>
+              // <Link key={i} to={item.url} className={classes.link}>{item.name}</Link>
+              <Link key={i} to={item.url}>{item.name}</Link>
             ))}
-            {user && <PersonIcon/>}            
+            {user && <PersonIcon />}
           </div>
         )}
       </Toolbar>
