@@ -1,5 +1,5 @@
 import { React, useEffect } from 'react';
-import { Button, CssBaseline, TextField, FormControlLabel, Checkbox, Link, Grid, Box, Typography, Container } from '@mui/material'
+import { Button, CssBaseline, TextField, FormControlLabel, Checkbox, Link, Grid, Box, Typography, Container, Autocomplete } from '@mui/material'
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import logo from '../media/logo2.png'
 import config from '../config/config';
@@ -24,18 +24,16 @@ export function Registration() {
 
     const newVehicle = {
       vehicleNo: data.get('vehicleNo'),
+      vehicleName:data.get('vehicleName'),
       driverName: data.get('driverName'),
       phoneNumber: data.get('phoneNumber'),
       email: data.get('email'),
       password: data.get('password'),
     }
-
-
     addVehicle(newVehicle);
-
-
     console.log({
       vehicleNo: data.get('vehicleNo'),
+      vehicleName:data.get('vehicleName'),
       driverName: data.get('driverName'),
       phoneNumber: data.get('phoneNumber'),
       email: data.get('email'),
@@ -43,7 +41,15 @@ export function Registration() {
     });
   };
 
-
+  const vehiclesList =[
+    { label:"TATA Truck"},
+    { label: "Mahindra Bolero"},
+    { label: "Ashok Laylend"},
+    {label: "Bolero Pickup"},
+    {label: "Heavy Vehicles"},
+    {label: "Tata Ultra Bus"},
+    {label:"Others"},
+  ]
 
   return (
 
@@ -81,6 +87,23 @@ export function Registration() {
                 </Grid>
 
                 <Grid item xs={12}>
+                  <Autocomplete 
+                    id="combo-box-demo"
+                    options={vehiclesList}
+                    renderInput={(params) => <TextField {...params} 
+                    autoComplete="Vehicle Name"
+                    name="vehicleName"
+                    required
+                    fullWidth
+                    id="vehicleName"
+                    label="Vehicle Name"
+                    autoFocus
+                    />}                  
+                  />
+                
+                  </Grid>
+
+                <Grid item xs={12}>
 
                   <TextField
                     autoComplete="Driver Name"
@@ -94,7 +117,6 @@ export function Registration() {
                 </Grid>
 
                 <Grid item xs={12}>
-
                   <TextField
                     autoComplete="Phone Number"
                     name="phoneNumber"
