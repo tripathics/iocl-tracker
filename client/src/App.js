@@ -4,6 +4,7 @@ import LayoutComponent from "./layout/layoutcomponent"
 import { Home, Client, Admin, Registration, SignIn, SignUp } from "./pages"
 import ProtectedComponent from "./components/ProtectedComponent"
 
+import './styles/styles.scss'
 import './styles/index.scss'
 // test
 import TestComp from "./test/FormComp"
