@@ -26,3 +26,4 @@ node_modules
 db.sh
 server/.env
 client/.env
+client/config

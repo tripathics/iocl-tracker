@@ -26,6 +26,7 @@ const getDbCollection = (collection, cb) => {
 const findUserByToken = (token, cb) => {
   if (!token) return cb(null, null);
   jwt.verify(token, SECRET, (err, decode) => {
+    if (!decode) return cb(null, null);
     getDbCollection('users', users => {
       users.findOne({ _id: ObjectId(decode.token), token: token }).then(user => {
         return cb(null, user);
