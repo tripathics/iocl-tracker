@@ -2,7 +2,8 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import config from "../config/config";
 
-import { AppBar, Container } from "@mui/material";
+import { AppBar, Container, List, ListItem, ListItemButton, ListItemText, Toolbar } from "@mui/material";
+import { Box } from "@mui/system";
 
 const navItems = {
   main: [
@@ -30,25 +31,55 @@ const Navigation = ({ user }) => {
     <div className="navbar-component">
       <AppBar position="static">
         <Container maxWidth="xl">
-          <nav className="mobile-nav">
-            <ul className="nav-list">
-              {navItems.main.map((item, i) => (
-                <NavItem key={`mm${i}`} url={item.url} label={item.label} />
+          <Toolbar>
+            <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+              
+            </Box>
+            <List>
+              {navItems.main.map((item) => (
+                <ListItem key={item.label} disablePadding>
+                  <ListItemButton sx={{ textAlign: 'center' }}>
+                    <ListItemText primary={item.label} />
+                  </ListItemButton>
+                </ListItem>
               ))}
 
               {user ? (<>
-                {navItems.auth.map((item, i) => (
-                  <NavItem key={`ma${i}`} url={item.url} label={item.label} />
+                {navItems.auth.map((item) => (
+                  <ListItem key={item.label} disablePadding>
+                    <ListItemButton sx={{ textAlign: 'center' }}>
+                      <ListItemText primary={item.label} />
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+              </>) : (
+                <ListItem key={'login'} disablePadding>
+                  <ListItemButton sx={{ textAlign: 'center' }}>
+                    <ListItemText primary={'Login'} />
+                  </ListItemButton>
+                </ListItem>
+              )}
+            </List>
+            {/* <nav className="mobile-nav">
+              <ul className="nav-list">
+                {navItems.main.map((item, i) => (
+                  <NavItem key={`mm${i}`} url={item.url} label={item.label} />
                 ))}
 
-                <li>
-                  <a href={`${config.API_BASE_URL}/users/logout`}>Logout</a>
-                </li>
-              </>) : (
-                <NavItem url='/login' label='Login' />
-              )}
-            </ul>
-          </nav>
+                {user ? (<>
+                  {navItems.auth.map((item, i) => (
+                    <NavItem key={`ma${i}`} url={item.url} label={item.label} />
+                  ))}
+
+                  <li>
+                    <a href={`${config.API_BASE_URL}/users/logout`}>Logout</a>
+                  </li>
+                </>) : (
+                  <NavItem url='/login' label='Login' />
+                )}
+              </ul>
+            </nav> */}
+          </Toolbar>
         </Container>
       </AppBar>
     </div>

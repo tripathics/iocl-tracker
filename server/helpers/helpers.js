@@ -20,14 +20,15 @@ const getDbCollection = (collection, cb) => {
  * @callback cb
  */
 /** 
+ * @param {string} userCollection User collection name
  * @param {string} token
  * @param {Cb1} cb
  **/
-const findUserByToken = (token, cb) => {
+const findUserByToken = (userCollection, token, cb) => {
   if (!token) return cb(null, null);
   jwt.verify(token, SECRET, (err, decode) => {
     if (!decode) return cb(null, null);
-    getDbCollection('users', users => {
+    getDbCollection(userCollection, users => {
       users.findOne({ _id: ObjectId(decode.token), token: token }).then(user => {
         return cb(null, user);
       })
@@ -53,6 +54,9 @@ const registerNewUser = (collection, newUser, res) => collection.findOne({ email
         password: hashedPassword,
         token: null
       }
+
+      if (newUser.vehicleId) hashedUser['vehicleId'] = newUser.vehicleId;
+
       console.log(hashedUser)
 
       collection.insertOne(hashedUser).then(result => {
@@ -72,7 +76,9 @@ const registerNewUser = (collection, newUser, res) => collection.findOne({ email
         } else {
           res.status(200).json({
             success: true,
-            user: result.insertedId,
+            user: {
+              userId: result.insertedId
+            }
           });
         }
       })
