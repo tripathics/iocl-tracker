@@ -28,7 +28,7 @@ userRoutes.route('/users/register').post((req, res) => {
 userRoutes.route('/users/login').post((req, res) => {
   let token = req.cookies.auth;
 
-  findUserByToken(token, (err, user) => {
+  findUserByToken('users', token, (err, user) => {
     if (err) return res(err);
     if (user) return res.status(400).json({ error: true, message: 'You are already logged in' });
 
@@ -79,7 +79,7 @@ userRoutes.route('/drivers/:id').get((req,res) =>{
 userRoutes.route('/drivers/login').post((req, res) => {
   let token = req.cookies.auth;
 
-  findUserByToken(token, (err, driver) => {
+  findUserByToken('drivers', token, (err, driver) => {
     if (err) return res(err);
     if (driver) return res.status(400).json({ error: true, message: 'You are already logged in' });
 
@@ -116,7 +116,7 @@ userRoutes.route('/drivers/login').post((req, res) => {
 // Drivers sign out
 userRoutes.route('/drivers/logout').get((req, res) => {
   let token = req.cookies.auth;
-  findUserByToken(token, (err,driver) => {
+  findUserByToken('drivers' ,token, (err,driver) => {
     if (err) throw err;
     if (!driver) return res.status(400).json({ error: true });
 
@@ -137,7 +137,7 @@ userRoutes.route('/drivers/logout').get((req, res) => {
 // sign out
 userRoutes.route('/users/logout').get((req, res) => {
   let token = req.cookies.auth;
-  findUserByToken(token, (err, user) => {
+  findUserByToken('users', token, (err, user) => {
     if (err) throw err;
     if (!user) return res.status(400).json({ error: true });
 
@@ -159,7 +159,7 @@ userRoutes.route('/users/logout').get((req, res) => {
 userRoutes.route('/users/auth').post((req, res) => {
   let token = req.cookies.auth;
 
-  findUserByToken(token, (err, user) => {
+  findUserByToken('users', token, (err, user) => {
     if (err) return res(err);
     if (!user) return res.status(401).json({ isAuth: false, message: 'Unauthorized' });
 
@@ -167,12 +167,10 @@ userRoutes.route('/users/auth').post((req, res) => {
   })
 })
 
-
-// check authorized for driver
 userRoutes.route('/drivers/auth').post((req, res) => {
   let token = req.cookies.auth;
 
-  findUserByToken(token, (err, driver) => {
+  findUserByToken('drivers', token, (err, driver) => {
     if (err) return res(err);
     if (!driver) return res.status(401).json({ isAuth: false, message: 'Unauthorized' });
 

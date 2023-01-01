@@ -29,8 +29,7 @@ tracksRoutes.route('/vehicles/:id').get((req, res) => {
 
 tracksRoutes.route('/vehicles/add').post((req, res) => {
   getDbCollection('vehicles', (vehicles) => {
-    const { driverName, email, phoneNumber, vehicleName, vehicleNo }
-      = req.body;
+    const { driverName, email, phoneNumber, vehicleName, vehicleNo } = req.body;
     let newVehicle = {
       vehicleName: vehicleName,
       vehicleNo: vehicleNo
@@ -46,7 +45,7 @@ tracksRoutes.route('/vehicles/add').post((req, res) => {
           phoneNumber: phoneNumber,
           email: email,
           password: plainPassword,
-          vehicleId: result.insertedId,
+          vehicleId: result.insertedId.toHexString(),
         }
         console.log(result);
         getDbCollection('drivers', drivers => {
