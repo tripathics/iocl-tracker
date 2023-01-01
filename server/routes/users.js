@@ -1,6 +1,6 @@
 const express = require('express');
 const userRoutes = express.Router();
-const { getDbCollection, findUserByToken } = require('../helpers/helpers');
+const { getDbCollection, findUserByToken, registerNewUser } = require('../helpers/helpers');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { ObjectID } = require('bson');
@@ -14,33 +14,13 @@ userRoutes.route('/users/register').post((req, res) => {
       return res.status(400).json({ message: "passwords doesn't match" });
     }
 
-    users.findOne({ email: email }).then(result => {
-      if (result) return res.status(400).json({ auth: false, message: 'Email exists' })
+    const user = {
+      name: name,
+      email: email,
+      password: password
+    }
 
-      bcrypt.hash(password, 10).then(hashedPassword => {
-        const newUser = {
-          name: name,
-          email: email,
-          password: hashedPassword,
-          token: null
-        }
-        console.log(newUser)
-
-        users.insertOne(newUser).then(result => {
-          console.log(`New user signed up: ${result.insertedId}`);
-          res.status(200).json({
-            success: true,
-            user: result.insertedId
-          });
-        })
-          .catch(err => {
-            throw err
-          })
-      })
-    })
-      .catch(err => {
-        throw err;
-      })
+    registerNewUser(users, user, res).catch(err => {throw err;});
   })
 })
 
@@ -61,7 +41,7 @@ userRoutes.route('/users/login').post((req, res) => {
             if (!isMatch) return res.json({ isAuth: false, message: "Password mismatched" });
 
             // generate token
-            let jwtToken = jwt.sign({token: user._id.toHexString()}, SECRET, { expiresIn: 60 * 60 });
+            let jwtToken = jwt.sign({ token: user._id.toHexString() }, SECRET, { expiresIn: 60 * 60 });
 
             let query = { _id: ObjectID(user._id) };
             let newvalues = {
