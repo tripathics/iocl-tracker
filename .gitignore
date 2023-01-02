@@ -23,7 +23,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 node_modules
-db.sh
+*.sh
 server/.env
 client/.env
 client/src/config

@@ -13,22 +13,19 @@ import { checkAuth } from "./helpers/helpers"
 function App() {
   const [isAuth, setIsAuth] = useState(null);
 
-  const handleUserState = (userId) => {
-    console.log(userId);
-    if (userId) setIsAuth(true);
+  const handleUserState = (res) => {
+    console.log(res);
+    if (res.isAuth) setIsAuth(true);
     else setIsAuth(false);
   }
 
   useEffect(() => {
-    checkAuth().then(id => {
-      if (id) setIsAuth(true);
+    checkAuth().then(res => {
+      console.log(res)
+      if (res.isAuth) setIsAuth(true);
       else setIsAuth(false);
-    });
+    })
   }, [])
-
-  const ProtectedCompProps = {
-    userState: isAuth,
-  };
 
   return (
     <BrowserRouter>
@@ -36,13 +33,13 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/admin" element={
-            <ProtectedComponent {...ProtectedCompProps} handleUserState={handleUserState} >
+            <ProtectedComponent userState={isAuth} handleUserState={handleUserState} >
               <Admin />
             </ProtectedComponent>
           } />
           <Route path="/client" element={<Client />} />
           <Route path="/register" element={
-            <ProtectedComponent {...ProtectedCompProps} handleUserState={handleUserState} >
+            <ProtectedComponent userState={isAuth} handleUserState={handleUserState} >
               <Registration />
             </ProtectedComponent>
           } />

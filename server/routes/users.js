@@ -20,7 +20,7 @@ userRoutes.route('/users/register').post((req, res) => {
       password: password
     }
 
-    registerNewUser(users, user, res).catch(err => {throw err;});
+    registerNewUser(users, user, res).catch(err => { throw err; });
   })
 })
 
@@ -63,16 +63,16 @@ userRoutes.route('/users/login').post((req, res) => {
 })
 
 
-userRoutes.route('/drivers/:id').get((req,res) =>{
-  getDbCollection('drivers',(drivers) =>{
-    let query = {_id:ObjectID(req.params.id)};
+userRoutes.route('/drivers/:id').get((req, res) => {
+  getDbCollection('drivers', (drivers) => {
+    let query = { _id: ObjectID(req.params.id) };
 
     drivers.findOne(query)
-      .then(result =>{res.json(result)})
-      .catch(err =>{
+      .then(result => { res.json(result) })
+      .catch(err => {
         throw err;
       });
-  } )
+  })
 })
 
 // sign in
@@ -101,11 +101,22 @@ userRoutes.route('/drivers/login').post((req, res) => {
 
             drivers.updateOne(query, newvalues).then(result => {
               console.log(result);
-              res.cookie('auth', jwtToken, { maxAge: 3600 * 1000 }).json({
-                isAuth: true, id: driver._id, email: driver.email
-              });
-            })
-              .catch(err => res.status(400).send(err));
+
+              getDbCollection('vehicles', vehicles => {
+                vehicles.findOne({ _id: ObjectID(driver.vehicleId) }).then(result => {
+                  let responseObject = {
+                    isAuth: true, id: driver._id, email: driver.email,
+                    vehicle: {
+                      vehicleName: result.vehicleName,
+                      vehicleNo: result.vehicleNo
+                    }
+                  };
+                  console.log('Response:', responseObject);
+                  return res.cookie('auth', jwtToken, { maxAge: 3600 * 1000 }).json(responseObject);
+
+                }).catch(err => { throw err });
+              })
+            }).catch(err => res.status(400).send(err));
           })
         })
       })
@@ -116,7 +127,7 @@ userRoutes.route('/drivers/login').post((req, res) => {
 // Drivers sign out
 userRoutes.route('/drivers/logout').get((req, res) => {
   let token = req.cookies.auth;
-  findUserByToken('drivers' ,token, (err,driver) => {
+  findUserByToken('drivers', token, (err, driver) => {
     if (err) throw err;
     if (!driver) return res.status(400).json({ error: true });
 
@@ -174,18 +185,7 @@ userRoutes.route('/drivers/auth').post((req, res) => {
     if (err) return res(err);
     if (!driver) return res.status(401).json({ isAuth: false, message: 'Unauthorized' });
 
-    getDbCollection('vehicles', vehicles => {
-      let responseObject = { isAuth: true, message: 'success' };
-
-      vehicles.findOne({_id: ObjectID(driver.vehicleId)}).then(result => {
-        responseObject['vehicle'] = {
-          vehicleName: result.vehicleName,
-          vehicleNo: result.vehicleNo
-        };
-        console.log(responseObject);
-        return res.status(200).json(responseObject);
-      }).catch(err => { throw err });
-    })
+    return res.status(200).json({ isAuth: true, message: 'success' });
   })
 })
 

@@ -7,12 +7,7 @@ const checkAuth = () => fetch(`${config.API_BASE_URL}/users/auth`, {
   headers: {
     'Content-type': 'application/json'
   },
-}).then(res => {
-  return res.json()
-})
-.then(result => {
-  return result.isAuth
-});
+}).then(res => res.json());
 
 /** 
  * Login the user with credentials in user object

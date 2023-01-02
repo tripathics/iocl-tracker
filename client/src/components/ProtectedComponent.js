@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { checkAuth } from '../helpers/helpers';
 
 const UnauthorizedComponent = () => (
@@ -10,8 +11,12 @@ const UnauthorizedComponent = () => (
 );
 
 const ProtectedComponent = ({ children, userState, handleUserState }) => {
+  const history = useNavigate();
   useEffect(() => {
-    checkAuth().then(id => handleUserState(id))
+    checkAuth().then(res => {
+      handleUserState(res);
+      if (!res.isAuth) return history('/login');
+    })
     .catch(err => { throw err });
   })
 
