@@ -63,6 +63,17 @@ userRoutes.route('/users/login').post((req, res) => {
 })
 
 
+userRoutes.route('/drivers/:id').get((req,res) =>{
+  getDbCollection('drivers',(drivers) =>{
+    let query = {_id:ObjectID(req.params.id)};
+
+    drivers.findOne(query)
+      .then(result =>{res.json(result)})
+      .catch(err =>{
+        throw err;
+      });
+  } )
+})
 
 // sign in
 userRoutes.route('/drivers/login').post((req, res) => {
