@@ -163,7 +163,18 @@ userRoutes.route('/drivers/auth').post((req, res) => {
     if (err) return res(err);
     if (!driver) return res.status(401).json({ isAuth: false, message: 'Unauthorized' });
 
-    return res.status(200).json({ isAuth: true, message: 'success' });
+    getDbCollection('vehicles', vehicles => {
+      let responseObject = { isAuth: true, message: 'success' };
+
+      vehicles.findOne({_id: ObjectID(driver.vehicleId)}).then(result => {
+        responseObject['vehicle'] = {
+          vehicleName: result.vehicleName,
+          vehicleNo: result.vehicleNo
+        };
+        console.log(responseObject);
+        return res.status(200).json(responseObject);
+      }).catch(err => { throw err });
+    })
   })
 })
 
