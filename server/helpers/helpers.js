@@ -20,19 +20,17 @@ const getDbCollection = (collection, cb) => {
  * @callback cb
  */
 /** 
- * @param {string} userCollection User collection name
- * @param {string} token
- * @param {Cb1} cb
+ * @param {string} token The token to check
+ * @param {Cb1} cb callback
  **/
-const findUserByToken = (userCollection, token, cb) => {
+const findUserByToken = (token, cb) => {
   if (!token) return cb(null, null);
   jwt.verify(token, SECRET, (err, decode) => {
     if (!decode) return cb(null, null);
-    getDbCollection(userCollection, users => {
-      users.findOne({ _id: ObjectId(decode.token), token: token }).then(user => {
-        return cb(null, user);
-      })
-        .catch(err => cb(err))
+    getDbCollection('logged_in', users => {
+      users.findOne({ userId: decode.id, token: token })
+      .then(user => cb(null, user))
+      .catch(err => cb(err));
     })
   })
 }
@@ -52,7 +50,6 @@ const registerNewUser = (collection, newUser, res) => collection.findOne({ email
         name: newUser.name,
         email: newUser.email,
         password: hashedPassword,
-        token: null
       }
 
       if (newUser.vehicleId) hashedUser['vehicleId'] = newUser.vehicleId;
@@ -88,6 +85,32 @@ const registerNewUser = (collection, newUser, res) => collection.findOne({ email
     })
   })
 
+/**
+ * Geneerate JWT token and sign in user
+ * @param {import('mongodb').Document} user
+ * @param {Response} res
+ */
+const generateToken = (user, res) => {
+  const expiresIn = 60 * 3;
+  const userId = user._id.toHexString()
+  const token = jwt.sign({ id: userId }, SECRET, { expiresIn: expiresIn });
 
+  let query = { userId: user._id.toHexString() };
+  let newValues = {$set: {
+    createdAt: new Date(),
+    userId: userId,
+    token: token
+  }}
 
-module.exports = { getDbCollection, findUserByToken, registerNewUser }
+  getDbCollection('logged_in', loggedIn => {
+    loggedIn.updateOne(query, newValues, {upsert: true})
+    .then(result => {
+      console.log(result);
+      return res.cookie('auth', token, { maxAge: 3 * 60 * 1000 }).json({
+        isAuth: true, id: user._id, email: user.email
+      });
+    }).catch(err => {throw err});
+  })
+}
+
+module.exports = { getDbCollection, findUserByToken, registerNewUser, generateToken }

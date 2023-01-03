@@ -16,6 +16,9 @@ module.exports = {
       if (db) {
         _db = db.db(dbName);
         console.log(`Successfully connected to ${dbName}.`);
+        _db.collection('logged_in').createIndex({ 'createdAt': 1 }, { expireAfterSeconds: 60 * 3 })
+        .then(() => {console.log('Created index for expiration')})
+        .catch(err => {throw err;})
       }
       return callback(err);
     });

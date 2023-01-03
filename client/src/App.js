@@ -12,6 +12,7 @@ import { checkAuth } from "./helpers/helpers"
 
 function App() {
   const [isAuth, setIsAuth] = useState(null);
+  const [user, setUser] = useState(null);
 
   const handleUserState = (res) => {
     console.log(res);
