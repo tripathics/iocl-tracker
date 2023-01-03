@@ -87,6 +87,11 @@ function Navigation({ logoutUser, user }) {
     setAnchorElUser(null);
   };
 
+  const handleLogout = () => {
+    handleCloseNavMenu();
+    logoutUser();
+  }
+
   const pages = user ? navItems.auth : navItems.main
 
   return (
@@ -153,7 +158,7 @@ function Navigation({ logoutUser, user }) {
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
-                  <MenuItem onClick={handleCloseUserMenu}>
+                  <MenuItem onClick={handleLogout}>
                     <Typography textAlign="center">Logout</Typography>
                   </MenuItem>
                 </Menu>

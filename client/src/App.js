@@ -9,6 +9,7 @@ import './styles/index.scss'
 // test
 import TestComp from "./test/FormComp"
 import { checkAuth } from "./helpers/helpers"
+import config from "./config/config"
 
 function App() {
   const [isAuth, setIsAuth] = useState(null);
@@ -28,9 +29,21 @@ function App() {
     })
   }, [])
 
+  const logoutUser = () => {
+    fetch(`${config.API_BASE_URL}/users/logout`, {
+      method: 'GET',
+      credentials: "include",
+      headers: {
+        'Content-type': 'application/json'
+      }
+    }).then(res => {
+      if (res.ok) setIsAuth(false);
+    }).catch(err => {throw err});
+  }
+
   return (
     <BrowserRouter>
-      <LayoutComponent user={isAuth}>
+      <LayoutComponent user={isAuth} handleLogout={logoutUser}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/admin" element={
