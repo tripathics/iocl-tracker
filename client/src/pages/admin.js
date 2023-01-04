@@ -22,7 +22,17 @@ const Admin = () => {
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: config.GOOGLE_MAPS_API_KEY,
   })
+  const icon1 ={
+    url:"https://img.icons8.com/color/30/null/car-top-view.png",
+    //scaledSize: GoogleMap.fontSize(30,30), //Size(30,30),
+    //anchor: new window.google.maps.Point(20,20),
+    //scale :0.7,
+  };
 
+  const icon2 ={
+    url:"..\media\Icons\truck.png",
+    scale:0.7,
+  }
   if (!isLoaded) {
     return <div style={{
       width: "fit-content",
@@ -55,6 +65,7 @@ const Admin = () => {
             {vehicles.map((vehicle, i) => (
               <Marker key={i}
                 position={vehicle.pos.coords}
+                icon={icon1}
                 label={vehicle.driverName}
               />
             ))}
