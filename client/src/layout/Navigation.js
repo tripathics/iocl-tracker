@@ -1,86 +1,56 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-import { 
-  AppBar, Toolbar, Container, Typography, Menu, MenuItem, Button, IconButton, 
-  Tooltip, Avatar 
+import {
+  AppBar, Toolbar, Container, Typography, Menu, MenuItem, Button, IconButton,
+  Tooltip, Avatar, Paper, Card
 } from "@mui/material";
 import { Box } from "@mui/system";
 
-import { 
-  Menu as MenuIcon,
-  Adb as AdbIcon,
-} from '@mui/icons-material'
+import IOCL from "../media/logo/Indian_Oil_Logo.svg"
 
-const Logo = ({ display }) => {
-  const sxDisplay = { xs: 'flex', md: 'none' };
-  const responsiveProps = {
-    variant: 'h5',
-    flexGrow: 1
-  }
-  if (display === 'desktop') {
-    sxDisplay.xs = 'none';
-    sxDisplay.md = 'flex';
-    responsiveProps.variant = 'h6';
-    responsiveProps.flexGrow = 0;
-  }
-  return (<>
-    <AdbIcon sx={{ display: sxDisplay, mr: 1 }} />
-    <Typography
-      {...responsiveProps}
-      noWrap
-      component={NavLink} to='/'
-      sx={{
-        mr: 2,
-        display: sxDisplay,
-        fontFamily: 'monospace',
-        fontWeight: 700,
-        letterSpacing: '.3rem',
-        color: 'inherit',
-        textDecoration: 'none',
-      }}>
-      VSS
-    </Typography>
-  </>)
-}
+const Logo = () => (
+<Box sx={{ display: "flex", alignItems: "center" }}>
+  <Box sx={{ height: 64, mr: 1, padding: 1 }}>
+  <img src={IOCL} style={{
+    height:'100%'
+  }} />
+  </Box>
+  <Typography
+  component={NavLink} to='/' 
+    variant='h5'
+    noWrap
+    sx={{
+      mr: 2,
+      display: { xs: 'none', sm: 'flex' },
+      fontFamily: 'monospace',
+      fontWeight: 700,
+      letterSpacing: '.3rem',
+      color: 'inherit',
+      textDecoration: 'none',
+    }}>
+    IOCL
+  </Typography>
+</Box>)
 
 const NavBox = ({ display, children }) => {
-  const xsDisplay = display === 'mobile' 
-                    ? { xs: 'flex', md: 'none' }
-                    : { xs: 'none', md: 'flex' };
-
   return (
-    <Box sx={{ flexGrow: 1, display: xsDisplay }}>
+    <Box sx={{ flexGrow: 1, display: "flex" }}>
       {children}
     </Box>
   )
 }
 
-const navItems = {
-  main: [
-    { url: '/', icon: 'floppy', label: 'Home' },
-    { url: '/login', icon: 'floppy', label: 'Login' },
-  ],
-  auth: [
-    { url: '/', icon: 'floppy', label: 'Home' },
-    { url: '/admin', icon: 'floppy', label: 'Admin' },
-    { url: '/register', icon: 'floppy', label: 'Register' },
-  ],
-}
+const navItems = [
+  { url: '/admin', icon: 'floppy', label: 'Dashboard' },
+  { url: '/register', icon: 'floppy', label: 'Register' },
+]
 
 function Navigation({ logoutUser, user }) {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
   };
 
   const handleCloseUserMenu = () => {
@@ -88,82 +58,82 @@ function Navigation({ logoutUser, user }) {
   };
 
   const handleLogout = () => {
-    handleCloseNavMenu();
+    handleCloseUserMenu();
     logoutUser();
   }
 
-  const pages = user ? navItems.auth : navItems.main
-
   return (
-    <AppBar position="static">
+    <AppBar elevation={2} position="sticky" color="transparent" sx={{
+      backgroundColor: '#ffffffcc',
+      backdropFilter: 'blur(4px)'
+    }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Logo display='desktop' />
-
-          <NavBox display='mobile'>
-            <IconButton size="large" aria-label="account of current user" aria-controls="menu-appbar" 
-              aria-haspopup="true" onClick={handleOpenNavMenu} color="inherit" >
-              <MenuIcon />
-            </IconButton>
-
-            <Menu id="menu-appbar" anchorEl={anchorElNav} anchorOrigin={{ vertical: 'bottom', horizontal: 'left', }}
-              keepMounted transformOrigin={{ vertical: 'top', horizontal: 'left', }}
-              open={Boolean(anchorElNav)} onClose={handleCloseNavMenu} sx={{ display: { xs: 'block', md: 'none' }, }}
-            >
-              {pages.map((page) => (
-                <MenuItem key={page.label}
-                  onClick={handleCloseNavMenu}
-                  component={NavLink} to={page.url}
-                >
-                  <Typography textAlign="center">{page.label}</Typography>
-                </MenuItem>
+          <NavBox>
+            {user && (<>
+              {navItems.map((page) => (
+                <Button
+                  disableTouchRipple
+                  key={page.label}
+                  sx={{
+                    color: 'grey', 
+                    my: 2, display: 'block',
+                    '&.active': {
+                      color: 'black'
+                    },
+                    '&.hover': {
+                      backgroundColor: 'seagreen',
+                      border: 'solid 1px seagreen'
+                    }
+                  }}
+                  LinkComponent={NavLink} to={page.url}
+                >{page.label}</Button>
               ))}
-            </Menu>
+            </>)}
           </NavBox>
 
-          <Logo display='mobile' />
-          <NavBox display='desktop'>
-            {pages.map((page) => (
-              <Button
-                key={page.label}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-                LinkComponent={NavLink} to={page.url}
-              >{page.label}</Button>
-            ))}
-          </NavBox>
-
-          {user && (
+          {user ? (
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Profile">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                  <Avatar alt={user.name} src={user.profile} />
                 </IconButton>
               </Tooltip>
 
-              {user && (
-                <Menu
-                  sx={{ mt: '45px' }}
-                  id="menu-appbar"
-                  anchorEl={anchorElUser}
-                  anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  open={Boolean(anchorElUser)}
-                  onClose={handleCloseUserMenu}
-                >
-                  <MenuItem onClick={handleLogout}>
-                    <Typography textAlign="center">Logout</Typography>
-                  </MenuItem>
-                </Menu>
-              )}
+              <Menu
+                sx={{ mt: '45px' }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                <Box marginX={2} marginY={2} sx={{minWidth: 100}}>
+                  <Typography textAlign='center' variant="h6">
+                    {user.name}
+                  </Typography>
+                  <Typography textAlign='center' variant="body1">
+                    {user.email}
+                  </Typography>
+                </Box>
+                <MenuItem onClick={handleLogout}>
+                  <Typography textAlign="center">Logout</Typography>
+                </MenuItem>
+              </Menu>
             </Box>
+          ) : (
+            <Button component={NavLink} variant='outlined' to='/login'>
+              <Typography textAlign="center">Login</Typography>
+            </Button>
           )}
         </Toolbar>
       </Container>

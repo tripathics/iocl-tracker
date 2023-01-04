@@ -137,7 +137,7 @@ userRoutes.route('/users/auth').post((req, res) => {
 userRoutes.route('/drivers/auth').post((req, res) => {
   let token = req.cookies.auth;
 
-  findUserByToken(token, (err, driver) => {
+  findUserByToken('logged_in_drivers', token, (err, driver) => {
     if (err) return res(err);
     if (!driver) return res.status(401).json({ isAuth: false, message: 'Unauthorized' });
 

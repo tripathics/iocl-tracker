@@ -12,22 +12,38 @@ import { checkAuth } from "./helpers/helpers"
 import config from "./config/config"
 
 function App() {
-  const [isAuth, setIsAuth] = useState(null);
   const [user, setUser] = useState(null);
 
   const handleUserState = (res) => {
     console.log(res);
-    if (res.isAuth) setIsAuth(true);
-    else setIsAuth(false);
+    if (!res.isAuth) setUser(null);
   }
 
   useEffect(() => {
+    const user = {
+      id: localStorage.getItem('userId'),
+      email: localStorage.getItem('userEmail'),
+      name: localStorage.getItem('userName')
+    }
+    setUser(user);
     checkAuth().then(res => {
       console.log(res)
-      if (res.isAuth) setIsAuth(true);
-      else setIsAuth(false);
+      if (!res.isAuth) {
+        setUser(null);
+        localStorage.removeItem('userId');
+        localStorage.removeItem('userEmail');
+        localStorage.removeItem('userName');
+      };
     })
   }, [])
+
+  const handleUser = (user) => {
+    console.log(user);
+    setUser(user);
+    localStorage.setItem('userId', user.id);
+    localStorage.setItem('userEmail', user.email);
+    localStorage.setItem('userName', user.name);
+  }
 
   const logoutUser = () => {
     fetch(`${config.API_BASE_URL}/users/logout`, {
@@ -37,27 +53,34 @@ function App() {
         'Content-type': 'application/json'
       }
     }).then(res => {
-      if (res.ok) setIsAuth(false);
-    }).catch(err => {throw err});
+      if (res.ok) {
+        setUser(null);
+        localStorage.removeItem('userId');
+        localStorage.removeItem('userEmail');
+        localStorage.removeItem('userName');
+      }
+    }).catch(err => { throw err });
   }
 
   return (
     <BrowserRouter>
-      <LayoutComponent user={isAuth} handleLogout={logoutUser}>
+      <LayoutComponent user={user} handleLogout={logoutUser}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/admin" element={
-            <ProtectedComponent userState={isAuth} handleUserState={handleUserState} >
+            <ProtectedComponent userState={user} handleUserState={handleUserState} >
               <Admin />
             </ProtectedComponent>
           } />
           <Route path="/client" element={<Client />} />
           <Route path="/register" element={
-            <ProtectedComponent userState={isAuth} handleUserState={handleUserState} >
+            <ProtectedComponent userState={user} handleUserState={handleUserState} >
               <Registration />
             </ProtectedComponent>
           } />
-          <Route path="/login" element={<SignIn />} />
+          <Route path="/login" element={
+            <SignIn handleUser={handleUser} />
+          } />
           <Route path="/signup" element={<SignUp />} />
           <Route path='/test' element={<TestComp />} />
         </Routes>

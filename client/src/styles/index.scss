@@ -1,10 +1,21 @@
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+:root {
+    --nav-height: 64px;
+    --footer-height: 175px;
 }
 
-.container {
-    max-width: 1080px;
-    margin: auto;
+
+.main-component-wrapper
+{
+    padding: 1px;
+    min-height: calc(100vh - 64px - 175px);
+}
+
+
+.home-component {
+    .hero {
+        background-image: url('../../public/static/media/iocl-refinary.jpg');
+        background-size: cover;
+        background-position: top center;
+        height: calc(100vh - var(--nav-height));
+    }
 }
