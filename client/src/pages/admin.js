@@ -23,16 +23,20 @@ const Admin = () => {
     googleMapsApiKey: config.GOOGLE_MAPS_API_KEY,
   })
   const icon1 ={
-    url:"https://img.icons8.com/color/30/null/car-top-view.png",
+    url:"https://raw.githubusercontent.com/tripathics/iocl-tracker/master/client/src/media/Icons/car.png",
+
     //scaledSize: GoogleMap.fontSize(30,30), //Size(30,30),
     //anchor: new window.google.maps.Point(20,20),
-    //scale :0.7,
   };
 
-  const icon2 ={
-    url:"..\media\Icons\truck.png",
-    scale:0.7,
-  }
+  const icons =[
+    "https://raw.githubusercontent.com/tripathics/iocl-tracker/master/client/src/media/Icons/car.png",
+    "https://raw.githubusercontent.com/tripathics/iocl-tracker/master/client/src/media/Icons/ambulence.png",
+    "https://raw.githubusercontent.com/tripathics/iocl-tracker/master/client/src/media/Icons/truck.png",
+    "https://raw.githubusercontent.com/tripathics/iocl-tracker/master/client/src/media/Icons/fireTruck.png",
+    "https://raw.githubusercontent.com/tripathics/iocl-tracker/master/client/src/media/Icons/bulldozer.png"
+  ]
+
   if (!isLoaded) {
     return <div style={{
       width: "fit-content",
@@ -65,8 +69,11 @@ const Admin = () => {
             {vehicles.map((vehicle, i) => (
               <Marker key={i}
                 position={vehicle.pos.coords}
-                icon={icon1}
+                //icon={{ url: "https://raw.githubusercontent.com/tripathics/iocl-tracker/master/client/src/media/Icons/car.png", scaledSize: new window.google.maps.Size(30, 42) }} 
+                //icon={icons[0]}
+                icon={{url: icons[1], scaledSize: new window.google.maps.Size(30, 70)}}
                 label={vehicle.driverName}
+                className="hello"
               />
             ))}
           </GoogleMap>
