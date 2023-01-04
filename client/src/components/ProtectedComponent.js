@@ -4,9 +4,7 @@ import { checkAuth } from '../helpers/helpers';
 
 const UnauthorizedComponent = () => (
   <div className='unauthorized-component'>
-    <div className='container'>
-      <h2>Unauthorized</h2>
-    </div>
+    <h2>Unauthorized</h2>
   </div>
 );
 

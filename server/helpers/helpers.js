@@ -20,19 +20,18 @@ const getDbCollection = (collection, cb) => {
  * @callback cb
  */
 /** 
- * @param {string} userCollection User collection name
- * @param {string} token
- * @param {Cb1} cb
+ * @param {string} userLoginCollection User login collection name
+ * @param {string} token The token to check
+ * @param {Cb1} cb callback
  **/
-const findUserByToken = (userCollection, token, cb) => {
+const findUserByToken = (userLoginCollection, token, cb) => {
   if (!token) return cb(null, null);
   jwt.verify(token, SECRET, (err, decode) => {
     if (!decode) return cb(null, null);
-    getDbCollection(userCollection, users => {
-      users.findOne({ _id: ObjectId(decode.token), token: token }).then(user => {
-        return cb(null, user);
-      })
-        .catch(err => cb(err))
+    getDbCollection(userLoginCollection, users => {
+      users.findOne({ userId: decode.id, token: token })
+      .then(user => cb(null, user))
+      .catch(err => cb(err));
     })
   })
 }
@@ -52,7 +51,6 @@ const registerNewUser = (collection, newUser, res) => collection.findOne({ email
         name: newUser.name,
         email: newUser.email,
         password: hashedPassword,
-        token: null
       }
 
       if (newUser.vehicleId) hashedUser['vehicleId'] = newUser.vehicleId;
@@ -88,6 +86,51 @@ const registerNewUser = (collection, newUser, res) => collection.findOne({ email
     })
   })
 
+/**
+ * Geneerate JWT token and sign in user
+ * @param {string} userLoginCollection User login collection name
+ * @param {import('mongodb').Document} user
+ * @param {Response} res
+ */
+const generateToken = (userLoginCollection, user, res) => {
+  const expiresIn = 60 * 3;
+  const userId = user._id.toHexString()
+  const token = jwt.sign({ id: userId }, SECRET, { expiresIn: expiresIn });
 
+  let query = { userId: user._id.toHexString() };
+  let newValues = {$set: {
+    createdAt: new Date(),
+    userId: userId,
+    token: token
+  }}
 
-module.exports = { getDbCollection, findUserByToken, registerNewUser }
+  getDbCollection(userLoginCollection, loggedIn => {
+
+    loggedIn.updateOne(query, newValues, {upsert: true})
+    .then(result => {
+
+      if (userLoginCollection === 'logged_in_drivers') {
+        getDbCollection('vehicles', vehicles => {
+          vehicles.findOne({_id: ObjectId(user.vehicleId)})
+          .then(result => {
+            const vehicle = {
+              vehicleNo: result.vehicleNo,
+              vehicleName: result.vehicleName,
+            }
+            return res.cookie('auth', token, { maxAge: 3 * 60 * 1000 }).json({
+              isAuth: true, id: user._id, email: user.email, name: user.name,
+              vehicleId: user.vehicleId, vehicle: vehicle
+            });
+          })
+        })
+      } else {
+        return res.cookie('auth', token, { maxAge: 3 * 60 * 1000 }).json({
+          isAuth: true, id: user._id, email: user.email, name: user.name
+        });
+      }
+      console.log(result);
+    }).catch(err => {throw err});
+  })
+}
+
+module.exports = { getDbCollection, findUserByToken, registerNewUser, generateToken }

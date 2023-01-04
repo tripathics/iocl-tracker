@@ -1,6 +1,6 @@
 const express = require('express');
 const userRoutes = express.Router();
-const { getDbCollection, findUserByToken, registerNewUser } = require('../helpers/helpers');
+const { getDbCollection, findUserByToken, registerNewUser, generateToken } = require('../helpers/helpers');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { ObjectID } = require('bson');
@@ -28,37 +28,25 @@ userRoutes.route('/users/register').post((req, res) => {
 userRoutes.route('/users/login').post((req, res) => {
   let token = req.cookies.auth;
 
-  findUserByToken('users', token, (err, user) => {
+  // checked if already signed in
+  findUserByToken('logged_in_users', token, (err, user) => {
     if (err) return res(err);
     if (user) return res.status(400).json({ error: true, message: 'You are already logged in' });
 
-    else {
-      getDbCollection('users', users => {
-        users.findOne({ 'email': req.body.email }).then(user => {
-          if (!user) return res.json({ isAuth: false, message: 'Email does not exist' });
+    // find user by email
+    getDbCollection('users', users => {
+      users.findOne({ 'email': req.body.email }).then(user => {
+        if (!user) return res.json({ isAuth: false, message: 'Email does not exist' });
 
-          bcrypt.compare(req.body.password, user.password).then(isMatch => {
+        bcrypt.compare(req.body.password, user.password)
+          .then(isMatch => {
             if (!isMatch) return res.json({ isAuth: false, message: "Password mismatched" });
 
             // generate token
-            let jwtToken = jwt.sign({ token: user._id.toHexString() }, SECRET, { expiresIn: 60 * 60 });
-
-            let query = { _id: ObjectID(user._id) };
-            let newvalues = {
-              $set: { token: jwtToken },
-            };
-
-            users.updateOne(query, newvalues).then(result => {
-              console.log(result);
-              res.cookie('auth', jwtToken, { maxAge: 3600 * 1000 }).json({
-                isAuth: true, id: user._id, email: user.email
-              });
-            })
-              .catch(err => res.status(400).send(err));
+            generateToken('logged_in_users', user, res);
           })
-        })
       })
-    }
+    })
   })
 })
 
@@ -79,68 +67,39 @@ userRoutes.route('/drivers/:id').get((req, res) => {
 userRoutes.route('/drivers/login').post((req, res) => {
   let token = req.cookies.auth;
 
-  findUserByToken('drivers', token, (err, driver) => {
+  findUserByToken('logged_in_drivers', token, (err, driver) => {
     if (err) return res(err);
     if (driver) return res.status(400).json({ error: true, message: 'You are already logged in' });
 
-    else {
-      getDbCollection('drivers', drivers => {
-        drivers.findOne({ 'email': req.body.email }).then(driver => {
-          if (!driver) return res.json({ isAuth: false, message: 'Email does not exist' });
+    getDbCollection('drivers', drivers => {
+      drivers.findOne({ 'email': req.body.email }).then(driver => {
+        if (!driver) return res.json({ isAuth: false, message: 'Email does not exist' });
 
-          bcrypt.compare(req.body.password, driver.password).then(isMatch => {
-            if (!isMatch) return res.json({ isAuth: false, message: "Password mismatched" });
+        bcrypt.compare(req.body.password, driver.password).then(isMatch => {
+          if (!isMatch) return res.json({ isAuth: false, message: "Password mismatched" });
 
-            // generate token
-            let jwtToken = jwt.sign({ token: driver._id.toHexString() }, SECRET, { expiresIn: 60 * 60 });
-
-            let query = { _id: ObjectID(driver._id) };
-            let newvalues = {
-              $set: { token: jwtToken },
-            };
-
-            drivers.updateOne(query, newvalues).then(result => {
-              console.log(result);
-
-              getDbCollection('vehicles', vehicles => {
-                vehicles.findOne({ _id: ObjectID(driver.vehicleId) }).then(result => {
-                  let responseObject = {
-                    isAuth: true, id: driver._id, email: driver.email,
-                    vehicle: {
-                      vehicleName: result.vehicleName,
-                      vehicleNo: result.vehicleNo
-                    }
-                  };
-                  console.log('Response:', responseObject);
-                  return res.cookie('auth', jwtToken, { maxAge: 3600 * 1000 }).json(responseObject);
-
-                }).catch(err => { throw err });
-              })
-            }).catch(err => res.status(400).send(err));
-          })
+          // generate token and sign in user
+          generateToken('logged_in_drivers', driver, res);
         })
       })
-    }
+    })
   })
 })
 
 // Drivers sign out
 userRoutes.route('/drivers/logout').get((req, res) => {
   let token = req.cookies.auth;
-  findUserByToken('drivers', token, (err, driver) => {
+  findUserByToken('logged_in_drivers', token, (err, driver) => {
     if (err) throw err;
     if (!driver) return res.status(400).json({ error: true });
 
     // if user found, clear token from db
-    getDbCollection('drivers', drivers => {
-      const newValues = { $unset: { token: 1 } }
-      const query = { _id: ObjectID(driver._id) }
-      drivers.updateOne(query, newValues).then(result => {
-        console.log(result);
-        res.sendStatus(200);
-      }).catch(err => {
-        res.status(400).send(err);
-      })
+    getDbCollection('logged_in_drivers', drivers => {
+      drivers.deleteOne({ token: token })
+        .then(() => {
+          res.cookie('auth', '', { expires: new Date(0) }).sendStatus(200);
+        })
+        .catch(err => { res.sendStatus(400).json(err); })
     })
   })
 })
@@ -148,20 +107,17 @@ userRoutes.route('/drivers/logout').get((req, res) => {
 // sign out
 userRoutes.route('/users/logout').get((req, res) => {
   let token = req.cookies.auth;
-  findUserByToken('users', token, (err, user) => {
+  findUserByToken('logged_in_users', token, (err, driver) => {
     if (err) throw err;
-    if (!user) return res.status(400).json({ error: true });
+    if (!driver) return res.status(400).json({ error: true });
 
     // if user found, clear token from db
-    getDbCollection('users', users => {
-      const newValues = { $unset: { token: 1 } }
-      const query = { _id: ObjectID(user._id) }
-      users.updateOne(query, newValues).then(result => {
-        console.log(result);
-        res.sendStatus(200);
-      }).catch(err => {
-        res.status(400).send(err);
-      })
+    getDbCollection('logged_in_users', drivers => {
+      drivers.deleteOne({ token: token })
+        .then(() => {
+          res.cookie('auth', '', { expires: new Date(0) }).sendStatus(200);
+        })
+        .catch(err => { res.sendStatus(400).json(err); })
     })
   })
 })
@@ -170,7 +126,7 @@ userRoutes.route('/users/logout').get((req, res) => {
 userRoutes.route('/users/auth').post((req, res) => {
   let token = req.cookies.auth;
 
-  findUserByToken('users', token, (err, user) => {
+  findUserByToken('logged_in_users', token, (err, user) => {
     if (err) return res(err);
     if (!user) return res.status(401).json({ isAuth: false, message: 'Unauthorized' });
 
@@ -181,7 +137,7 @@ userRoutes.route('/users/auth').post((req, res) => {
 userRoutes.route('/drivers/auth').post((req, res) => {
   let token = req.cookies.auth;
 
-  findUserByToken('drivers', token, (err, driver) => {
+  findUserByToken(token, (err, driver) => {
     if (err) return res(err);
     if (!driver) return res.status(401).json({ isAuth: false, message: 'Unauthorized' });
 

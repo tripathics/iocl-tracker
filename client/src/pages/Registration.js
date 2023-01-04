@@ -105,7 +105,6 @@ export function Registration() {
                     fullWidth
                     id="vehicleName"
                     label="Vehicle Name"
-                    autoFocus
                     />}                  
                   />
                 
@@ -120,7 +119,6 @@ export function Registration() {
                     fullWidth
                     id="DriverName"
                     label="Driver Full Name"
-                    autoFocus
                   />
                 </Grid>
 
@@ -133,7 +131,6 @@ export function Registration() {
                     fullWidth
                     id="phoneNumber"
                     label="Mobile Number"
-                    autoFocus
                   />
                 </Grid>
 
@@ -146,18 +143,6 @@ export function Registration() {
                     label="Email Address"
                     name="email"
                     autoComplete="email"
-                  />
-                </Grid>
-
-                <Grid item xs={12}>
-                  <TextField
-                    required={true}
-                    fullWidth
-                    name="password"
-                    label="Password"
-                    type="password"
-                    id="password"
-                    autoComplete="new-password"
                   />
                 </Grid>
                 <Grid item xs={12}>

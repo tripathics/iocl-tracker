@@ -1,11 +1,12 @@
+import { Container } from "@mui/system";
 import React from "react";
 
 const Home = () => {
     return (
         <div className="home-component">
-            <div className="container">
+            <Container maxWidth="xl">
                 <h1>IOCL Tracker</h1>
-            </div>
+            </Container>
         </div>
     )
 }
