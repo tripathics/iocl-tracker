@@ -42,13 +42,21 @@ export function Registration() {
   };
 
   const vehiclesList =[
-    { label:"TATA Truck"},
-    { label: "Mahindra Bolero"},
-    { label: "Ashok Laylend"},
-    {label: "Bolero Pickup"},
-    {label: "Heavy Vehicles"},
-    {label: "Tata Ultra Bus"},
-    {label:"Others"},
+    { label: "Tata Sedan"},
+    { label: "Mahindra Hatchback"},
+    { label: "Estate Car"},
+    { label: "Mahindra SUV"},
+    { label: "Heavy Vehicles"},
+    { label: "Camper Van"},
+    { label: "Cement Mixer"},
+    { label: "Delivery Van"},
+    { label: "Fork Lift"},
+    { label: "Taxi/Cab"},
+    { label: "Crane"},
+    { label: "Bulldozer"},
+    { label: "Truck"},
+    { label: "Oil Tanker"},
+    { label:"Others"},
   ]
 
   return (
