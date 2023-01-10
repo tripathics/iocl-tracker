@@ -1,19 +1,19 @@
 :root {
     --nav-height: 64px;
-    --footer-height: 175px;
+    --footer-height: 240px;
 }
 
 
 .main-component-wrapper
 {
-    padding: 1px;
-    min-height: calc(100vh - 64px - 175px);
+    min-height: calc(100vh - var(--nav-height) - var(--footer-height));
 }
 
 
 .home-component {
     .hero {
-        background-image: url('../../public/static/media/iocl-refinary.jpg');
+        background: linear-gradient(0deg, rgba(0,0,0, 0.4), rgba(0,0,0, 0.1)),
+            url('../../public/static/media/iocl-refinary.jpg');
         background-size: cover;
         background-position: top center;
         height: calc(100vh - var(--nav-height));

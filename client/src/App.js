@@ -16,7 +16,7 @@ function App() {
 
   const handleUserState = (res) => {
     console.log(res);
-    if (!res.isAuth) setUser(null);
+    if (!res || !res.isAuth) setUser(null);
   }
 
   useEffect(() => {

@@ -13,9 +13,20 @@ const ProtectedComponent = ({ children, userState, handleUserState }) => {
   useEffect(() => {
     checkAuth().then(res => {
       handleUserState(res);
-      if (!res.isAuth) return history('/login');
+      if (!res.isAuth) {
+        localStorage.removeItem('userId');
+        localStorage.removeItem('userEmail');
+        localStorage.removeItem('userName');
+        return history('/login');
+      };
     })
-    .catch(err => { throw err });
+    .catch(err => {
+      localStorage.removeItem('userId');
+      localStorage.removeItem('userEmail');
+      localStorage.removeItem('userName');
+      handleUserState(null); 
+      throw err 
+    })
   })
 
   return userState ? children : <UnauthorizedComponent />

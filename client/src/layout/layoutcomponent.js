@@ -1,8 +1,7 @@
 import React from 'react'
-import Navbar from './Navbar'
 import Navigation from './Navigation'
 import Footer from './Footer'
-import { Box, Container } from '@mui/system'
+import { Box } from '@mui/system'
 import { createTheme, ThemeProvider } from '@mui/material'
 import { CssBaseline } from '@mui/material'
 
@@ -18,7 +17,7 @@ const LayoutComponent = ({ children, user, handleLogout }) => {
       <Box className='layout-component'>
       <CssBaseline />
         <Navigation user={user} logoutUser={handleLogout} />
-        <Box component='main' className='main-component-wrapper'>
+        <Box component='main' className='main-component-wrapper' sx={{ padding: '1px 0' }}>
           {children}
         </Box>
         <Footer />

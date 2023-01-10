@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 
 import {
   AppBar, Toolbar, Container, Typography, Menu, MenuItem, Button, IconButton,
-  Tooltip, Avatar, Paper, Card
+  Tooltip, Avatar
 } from "@mui/material";
 import { Box } from "@mui/system";
 
@@ -14,7 +14,7 @@ const Logo = () => (
   <Box sx={{ height: 64, mr: 1, padding: 1 }}>
   <img src={IOCL} style={{
     height:'100%'
-  }} />
+  }} alt="" />
   </Box>
   <Typography
   component={NavLink} to='/' 
