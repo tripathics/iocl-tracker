@@ -49,7 +49,6 @@ tracksRoutes.route('/vehicles/add').post((req, res) => {
           password: plainPassword,
           vehicleId: result.insertedId.toHexString(),
         }
-        console.log(result);
         getDbCollection('drivers', drivers => {
           registerNewUser(drivers, driver, res).catch(err => { throw err; });
         })
@@ -70,7 +69,6 @@ tracksRoutes.route("/update/:id").post(function (req, res) {
 
     vehicle.updateOne(myquery, newvalues)
       .then(result => {
-        console.log('1 document updated');
         res.json(result);
       })
       .catch(err => {

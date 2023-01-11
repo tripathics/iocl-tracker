@@ -69,7 +69,7 @@ function App() {
     <BrowserRouter>
       <LayoutComponent user={user} handleLogout={logoutUser}>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home isUser={user ? true : false} />} />
           <Route path="/admin" element={
             <ProtectedComponent userState={user} handleUserState={handleUserState} >
               <Admin />

@@ -3,7 +3,7 @@ import { Container } from "@mui/system";
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-const Home = () => {
+const Home = ({ isUser }) => {
     return (
         <Box className="home-component">
             <Box className="hero">
@@ -16,7 +16,7 @@ const Home = () => {
                         top: '50%',
                         transform: 'translate(0%, -50%)'
                     }}>
-                        <Typography sx={{color: '#fff', textShadow: '0px 2px 3px black'}} variant="h1" component="h1">
+                        <Typography sx={{ color: '#fff', textShadow: '0px 2px 3px black' }} variant="h1" component="h1">
                             Indian Oil Corp. Ltd.
                         </Typography>
                         <Typography variant="h4" sx={{
@@ -30,12 +30,18 @@ const Home = () => {
                             display: 'flex',
                             gap: 4
                         }}>
-                            <Button size="large" color='neutral' variant="contained" LinkComponent={NavLink} to='/login'>
-                                Login
-                            </Button>
-                            <Button size="large" color='neutral' variant="outlined" LinkComponent={NavLink} to='/signup'>
-                                Sign up
-                            </Button>
+                            {!isUser ? (<>
+                                <Button size="large" color='neutral' variant="contained" LinkComponent={NavLink} to='/login'>
+                                    Login
+                                </Button>
+                                <Button size="large" color='neutral' variant="outlined" LinkComponent={NavLink} to='/signup'>
+                                    Sign up
+                                </Button>
+                            </>) : (
+                                <Button size="large" color='neutral' variant="contained" LinkComponent={NavLink} to='/login'>
+                                    Dashboard
+                                </Button>
+                            )}
                         </Box>
                     </Box>
                 </Container>

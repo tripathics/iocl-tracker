@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const SECRET = process.env.JWT_SECRET;
+
+const { userAuthExpire, driverAuthExpire } = require('../config/config');
 const dbo = require('../db/conn');
 const { ObjectId } = require('mongodb');
 
@@ -93,9 +95,10 @@ const registerNewUser = (collection, newUser, res) => collection.findOne({ email
  * @param {Response} res
  */
 const generateToken = (userLoginCollection, user, res) => {
-  const expiresIn = 60 * 3;
+  const expiresInMin = userLoginCollection === 'logged_in_users' 
+                        ? userAuthExpire : driverAuthExpire;
   const userId = user._id.toHexString()
-  const token = jwt.sign({ id: userId }, SECRET, { expiresIn: expiresIn });
+  const token = jwt.sign({ id: userId }, SECRET, { expiresIn: 60 * expiresInMin });
 
   let query = { userId: user._id.toHexString() };
   let newValues = {$set: {
@@ -117,14 +120,14 @@ const generateToken = (userLoginCollection, user, res) => {
               vehicleNo: result.vehicleNo,
               vehicleName: result.vehicleName,
             }
-            return res.cookie('auth', token, { maxAge: 3 * 60 * 1000 }).json({
+            return res.cookie('auth', token, { maxAge: expiresInMin * 60 * 1000 }).json({
               isAuth: true, id: user._id, email: user.email, name: user.name,
               vehicleId: user.vehicleId, vehicle: vehicle
             });
           })
         })
       } else {
-        return res.cookie('auth', token, { maxAge: 3 * 60 * 1000 }).json({
+        return res.cookie('auth', token, { maxAge: expiresInMin * 60 * 1000 }).json({
           isAuth: true, id: user._id, email: user.email, name: user.name
         });
       }

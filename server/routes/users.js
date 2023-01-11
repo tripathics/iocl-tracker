@@ -2,9 +2,7 @@ const express = require('express');
 const userRoutes = express.Router();
 const { getDbCollection, findUserByToken, registerNewUser, generateToken } = require('../helpers/helpers');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 const { ObjectID } = require('bson');
-const SECRET = process.env.JWT_SECRET;
 
 // Register a new user
 userRoutes.route('/users/register').post((req, res) => {

@@ -1,26 +1,26 @@
 import { React, useEffect, useState } from "react"
 import { Box, Container } from "@mui/system"
-import { Divider, IconButton, List, ListItemButton, ListItemText, Paper, Tooltip, Typography } from "@mui/material"
+import { Divider, IconButton, List, ListItemButton, ListItemText, Paper, Skeleton, Tooltip, Typography } from "@mui/material"
 import { useJsApiLoader, GoogleMap, Marker } from "@react-google-maps/api"
 import config from '../config/config'
 import { Refresh as RefreshIcon } from "@mui/icons-material"
 
-const VehicleMarker = ({id, position, vehicleNo, icon}) => {
+const VehicleMarker = ({ id, position, vehicleNo, icon }) => {
   const [pos, setPos] = useState(position);
-  
+
   useEffect(() => {
     setInterval(() => {
       fetch(`${config.API_BASE_URL}/vehicles/${id}`)
-      .then(res => res.json())
-      .then(jsonRes =>  {
-        if (jsonRes.coords) {
-          setPos(jsonRes.coords);
-        } else {
-          console.log("Can't find vehicle with given ID"); 
-        }
-      }).catch(err => {
-        console.log(err);
-      })
+        .then(res => res.json())
+        .then(jsonRes => {
+          if (jsonRes.coords) {
+            setPos(jsonRes.coords);
+          } else {
+            console.log("Can't find vehicle with given ID");
+          }
+        }).catch(err => {
+          console.log(err);
+        })
     }, 10000)
   }, [])
 
@@ -70,69 +70,75 @@ const Admin = () => {
   ]
 
   return (
-    <>
-      {!isLoaded ? (<div style={{ width: "fit-content", margin: "auto", fontSize: "4rem" }}>Loading...</div>) : (
-        <Box sx={{ minHeight: "inherit", position: "relative" }}>
-          <Container maxWidth='xl' sx={{ height: 0 }}>
-            <Paper elevation={5} sx={{
-              top: '2rem',
-              position: 'absolute',
-              height: 'calc(100% - 4rem)',
-              minWidth: 350,
-              zIndex: 1,
-            }}>
-              <Box sx={{
-                margin: 2,
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center'
-              }}>
-                <Typography variant="h6" component="h3">
-                  Registered vehicles
-                </Typography>
-                <Tooltip title="Refresh locations">
-                  <IconButton onClick={() => { fetchVehicles() }}>
-                    <RefreshIcon />
-                  </IconButton>
-                </Tooltip>
-              </Box>
+    <Box sx={{ minHeight: "inherit", position: "relative" }}>
+      <Container maxWidth='xl' sx={{ height: 0 }}>
+        <Paper elevation={5} sx={{
+          top: '2rem',
+          position: 'absolute',
+          height: 'calc(100% - 4rem)',
+          minWidth: 350,
+          zIndex: 1,
+        }}>
+          <Box sx={{
+            margin: 2,
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+          }}>
+            {!isLoaded ? <Skeleton variant="rounded" height={48} sx={{ width: '100%' }} /> : (<>
+              <Typography variant="h6" component="h3">
+                Registered vehicles
+              </Typography>
+              <Tooltip title="Refresh locations">
+                <IconButton onClick={() => { fetchVehicles(); }}>
+                  <RefreshIcon />
+                </IconButton>
+              </Tooltip>
+            </>)}
+          </Box>
 
-              <Divider variant="fullWidth" />
+          <Divider variant="fullWidth" />
 
-              <List sx={{
-                overflow: "auto"
-              }}>
-                {vehicles.map((vehicle, i) => (<>
-                  <ListItemButton key={`listItem${i}`}>
-                    <ListItemText primary={vehicle.vehicleNo} />
-                  </ListItemButton>
-                  <Divider variant="middle" />
-                </>))}
-              </List>
-            </Paper>
-          </Container>
+          <List sx={{
+            overflow: "auto"
+          }}>
+            {!isLoaded ? (<>
+              <Skeleton variant="rectangular" height={32} sx={{mt: 2}} />
+              <Divider variant="middle" />
+              <Skeleton variant="rectangular" height={32} />
+            </>) : (<>
+              {vehicles.map((vehicle, i) => (<>
+                <ListItemButton key={`listItem${i}`}>
+                  <ListItemText primary={vehicle.vehicleNo} />
+                </ListItemButton>
+                <Divider variant="middle" />
+              </>))}
+            </>)}
+          </List>
+        </Paper>
+      </Container>
 
-          <GoogleMap
-            center={center}
-            zoom={15}
-            options={{ streetViewControl: false, mapTypeControl: false, fullscreenControl: false }}
-            mapContainerStyle={{ minHeight: "inherit" }}
-            onLoad={map => { console.log(`Map loaded`); fetchVehicles(); }}
-          >
-            {vehicles.map((vehicle) => (
-              <VehicleMarker key={vehicle._id}
-                id={vehicle._id}
-                position={vehicle.pos.coords}
-                icon={icons[0]}
-                vehicleNo={vehicle.vehicleNo} 
-              />
-            ))}
-          </GoogleMap>
-
-        </Box>
+      {!isLoaded ? <Skeleton animation="wave" sx={{ height: '100%', width: '100%' }} /> : (
+        <GoogleMap
+          center={center}
+          zoom={15}
+          options={{ streetViewControl: false, mapTypeControl: false, fullscreenControl: false }}
+          mapContainerStyle={{ minHeight: "inherit" }}
+          onLoad={map => { console.log(`Map loaded`); fetchVehicles(); }}
+        >
+          {vehicles.map((vehicle) => (
+            <VehicleMarker key={vehicle._id}
+              id={vehicle._id}
+              position={vehicle.pos.coords}
+              icon={icons[0]}
+              vehicleNo={vehicle.vehicleNo}
+            />
+          ))}
+        </GoogleMap>
       )}
-    </>
+
+    </Box>
   )
 }
 
