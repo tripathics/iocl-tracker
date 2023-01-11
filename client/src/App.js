@@ -54,12 +54,15 @@ function App() {
       }
     }).then(res => {
       if (res.ok) {
-        setUser(null);
-        localStorage.removeItem('userId');
-        localStorage.removeItem('userEmail');
-        localStorage.removeItem('userName');
+        console.log('Logged out successfully')
       }
-    }).catch(err => { throw err });
+    }).catch(err => { throw err })
+    .finally(() => {
+      setUser(null);
+      localStorage.removeItem('userId');
+      localStorage.removeItem('userEmail');
+      localStorage.removeItem('userName');
+    })
   }
 
   return (

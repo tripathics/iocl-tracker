@@ -10,6 +10,11 @@ const LayoutComponent = ({ children, user, handleLogout }) => {
   const theme = createTheme({
     palette: {
       mode: 'light',
+
+      neutral: {
+        main: '#fff',
+        contrastText: '#000',
+      },
     }
   })
   return (
@@ -17,7 +22,7 @@ const LayoutComponent = ({ children, user, handleLogout }) => {
       <Box className='layout-component'>
       <CssBaseline />
         <Navigation user={user} logoutUser={handleLogout} />
-        <Box component='main' className='main-component-wrapper' sx={{ padding: '1px 0' }}>
+        <Box component='main' className='main-component-wrapper'>
           {children}
         </Box>
         <Footer />

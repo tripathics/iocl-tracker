@@ -78,7 +78,7 @@ function Navigation({ logoutUser, user }) {
                   key={page.label}
                   sx={{
                     color: 'grey', 
-                    my: 2, display: 'block',
+                    my: 1, display: 'block',
                     '&.active': {
                       color: 'black'
                     },

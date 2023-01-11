@@ -1,6 +1,7 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { Container } from "@mui/system";
 import React from "react";
+import { NavLink } from "react-router-dom";
 
 const Home = () => {
     return (
@@ -24,6 +25,18 @@ const Home = () => {
                         }}>
                             What do we do? What don't we do
                         </Typography>
+
+                        <Box sx={{
+                            display: 'flex',
+                            gap: 4
+                        }}>
+                            <Button size="large" color='neutral' variant="contained" LinkComponent={NavLink} to='/login'>
+                                Login
+                            </Button>
+                            <Button size="large" color='neutral' variant="outlined" LinkComponent={NavLink} to='/signup'>
+                                Sign up
+                            </Button>
+                        </Box>
                     </Box>
                 </Container>
             </Box>

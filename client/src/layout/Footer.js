@@ -5,9 +5,10 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import HeartIcon from '@mui/icons-material/Favorite';
 
 import { Container, Box } from '@mui/system';
-import { Divider, Typography } from '@mui/material';
+import { Divider, dividerClasses, Link, Typography } from '@mui/material';
 
 export function Footer() {
   return (
@@ -23,14 +24,21 @@ export function Footer() {
           }}>
             <Box className='organization'>
               <Box className='LogoBox'>
-                <img src={logoGif} alt='this is gif' className='' />
+                <img style={{
+                  transform: 'translateX(-9px)'
+                }} src={logoGif} alt='this is gif' className='' />
                 <Typography variant='subtitle1'>
                   What do we do? What don't we do
                 </Typography>
               </Box>
-              <Box className='footerIcons'>
+              <Box sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                gap: 2
+              }}>
                 <TwitterIcon />
                 <GitHubIcon />
+                <FacebookIcon />
               </Box>
             </Box>
 
@@ -39,18 +47,50 @@ export function Footer() {
                 Links
               </Typography>
               <ul className='lists'>
-                <li>IOCL website</li>
-                <li>Project Repository</li>
+                <li>
+                  <Link color='CaptionText' underline='hover' target='_blank' rel='noreferrer'
+                    href='https://iocl.com/'>
+                    IOCL Website
+                  </Link>
+                </li>
+                <li>
+                  <Link color='CaptionText' underline='hover' target='_blank' rel='noreferrer'
+                    href='https://github.com/tripathics/iocl-tracker/'>
+                    Project Repository
+                  </Link>
+                </li>
               </ul>
             </Box>
 
             <Box className='ListItems'>
               <Typography variant='h6'>
-                IOCL
+                Made with <HeartIcon sx={{ fontSize: '1.2rem', transform: 'translateY(2px)' }}/> by
               </Typography>
               <ul className='lists'>
-                <li>About</li>
-                <li>Careers</li>
+                <li>
+                  <Link color='CaptionText' underline='hover' target='_blank' rel='noreferrer'
+                    href='https://github.com/tripathics'>
+                    Chandrashekhar Tripathi
+                  </Link>
+                </li>
+                <li>
+                  <Link color='CaptionText' underline='hover' target='_blank' rel='noreferrer'
+                    href='https://github.com/pursottam6003'>
+                    Pursottam Sah
+                  </Link>
+                </li>
+                <li>
+                  <Link color='CaptionText' underline='hover' target='_blank' rel='noreferrer'
+                    href='https://github.com/Sashanka21'>
+                    Sasanka Kashyap
+                  </Link>
+                </li>
+                <li>
+                  <Link color='CaptionText' underline='hover' target='_blank' rel='noreferrer'
+                    href='https://github.com/GangotriBhattacharjee'>
+                    Gangotri Bhattacharjee
+                  </Link>
+                </li>
               </ul>
             </Box>
 
@@ -61,8 +101,18 @@ export function Footer() {
                 Developers
               </Typography>
               <ul className='lists'>
-                <li>Report an Bug</li>
-                <li>Support Us</li>
+                <li>
+                  <Link color='CaptionText' underline='hover' target='_blank' rel='noreferrer'
+                    href='https://github.com/tripathics/iocl-tracker/issues'>
+                    Report an Bug
+                  </Link>
+                </li>
+                <li>
+                  <Link color='CaptionText' underline='hover' target='_blank' rel='noreferrer'
+                    href='https://github.com/tripathics/iocl-tracker/'>
+                    Support Us
+                  </Link>
+                </li>
               </ul>
             </Box>
           </Box>

@@ -67,7 +67,8 @@ export function Registration() {
           <CssBaseline />
           <Box
             sx={{
-              marginTop: 8,
+              marginTop: 4,
+              marginBottom: 2,
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
@@ -148,7 +149,7 @@ export function Registration() {
                 <Grid item xs={12}>
                   <FormControlLabel
                     control={<Checkbox value="allowExtraEmails" color="primary" />}
-                    label="By signing this document, you agree to the terms and conditions."
+                    label="The above details are correct to my knowledge and I agree to the TnC of IOCL"
                   />
                 </Grid>
               </Grid>
@@ -160,13 +161,6 @@ export function Registration() {
               >
                 Register Vehicle
               </Button>
-              <Grid container justifyContent="flex-end">
-                <Grid item>
-                  <Link href="#" variant="body2">
-                    Already have an account? Sign in
-                  </Link>
-                </Grid>
-              </Grid>
             </Box>
           </Box>
 

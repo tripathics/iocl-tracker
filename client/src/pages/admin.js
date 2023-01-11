@@ -1,6 +1,6 @@
 import { React, useState } from "react"
 import { Box, Container } from "@mui/system"
-import { Divider, List, ListItem, ListItemButton, ListItemText, Paper, Typography } from "@mui/material"
+import { Divider, List, ListItemButton, ListItemText, Paper, Typography } from "@mui/material"
 import { useJsApiLoader, GoogleMap, Marker } from "@react-google-maps/api"
 import config from '../config/config'
 
@@ -17,16 +17,6 @@ const Admin = () => {
       .catch(err => {
         console.log(err);
       })
-
-
-    // const response = await fetch(`${config.API_BASE_URL}/vehicles`);
-    // if (!response.ok) {
-    //   alert(`An error occured: ${response.statusText}`)
-    //   return;
-    // }
-    // /** @type {[]} */
-    // const vehicles = await response.json();
-    // setVehicles(vehicles.filter(vehicle => vehicle.pos))
   }
 
   const center = { lat: 26.182808644471546, lng: 91.80385223005672 }
@@ -68,7 +58,7 @@ const Admin = () => {
           minHeight: "inherit",
           position: "relative"
         }}>
-          <Container maxWidth='xl'>
+          <Container maxWidth='xl' sx={{ height: 0 }}>
             <Paper elevation={5} sx={{
               top: '2rem',
               position: 'absolute',
@@ -98,10 +88,11 @@ const Admin = () => {
             options={{
               streetViewControl: false,
               mapTypeControl: false,
-              fullscreenControl: false
+              fullscreenControl: false,
             }}
             mapContainerStyle={{
-              width: "100%", height: "100%", minHeight: "inherit"
+              // width: "100%", 
+              minHeight: "inherit"
             }}
             onLoad={map => { console.log(`Map loaded`); fetchVehicles(); }}
           >
