@@ -7,6 +7,8 @@ import {
 } from "@mui/material";
 import { Box } from "@mui/system";
 
+import { AccountCircle as UserIcon, Logout as LogoutIcon } from '@mui/icons-material'
+
 import IOCL from "../media/logo/Indian_Oil_Logo.svg"
 
 const Logo = () => (
@@ -97,7 +99,9 @@ function Navigation({ logoutUser, user }) {
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Profile">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt={user.name} src={user.profile} />
+                  <Avatar alt={user.name} sx={{ bgcolor: '#4191b7'}}>
+                    <UserIcon/>
+                  </Avatar>
                 </IconButton>
               </Tooltip>
 
@@ -125,8 +129,9 @@ function Navigation({ logoutUser, user }) {
                     {user.email}
                   </Typography>
                 </Box>
-                <MenuItem onClick={handleLogout}>
-                  <Typography textAlign="center">Logout</Typography>
+                <MenuItem onClick={handleLogout} sx={{justifyContent: 'center', gap: 1}}>
+                  <LogoutIcon />
+                  <Typography>Logout</Typography>
                 </MenuItem>
               </Menu>
             </Box>

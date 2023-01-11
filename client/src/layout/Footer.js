@@ -4,11 +4,10 @@ import logoGif from "../media/logo.gif"
 import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import GitHubIcon from '@mui/icons-material/GitHub';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import HeartIcon from '@mui/icons-material/Favorite';
 
 import { Container, Box } from '@mui/system';
-import { Divider, dividerClasses, Link, Typography } from '@mui/material';
+import { Divider, Link, Typography } from '@mui/material';
 
 export function Footer() {
   return (
@@ -64,6 +63,28 @@ export function Footer() {
 
             <Box className='ListItems'>
               <Typography variant='h6'>
+                Developers
+              </Typography>
+              <ul className='lists'>
+                <li>
+                  <Link color='CaptionText' underline='hover' target='_blank' rel='noreferrer'
+                    href='https://github.com/tripathics/iocl-tracker/issues'>
+                    Report an Bug
+                  </Link>
+                </li>
+                <li>
+                  <Link color='CaptionText' underline='hover' target='_blank' rel='noreferrer'
+                    href='https://github.com/tripathics/iocl-tracker/'>
+                    Support Us
+                  </Link>
+                </li>
+              </ul>
+            </Box>
+
+            <Box className='ListItems' sx={{
+              marginRight: 8
+            }}>
+              <Typography variant='h6'>
                 Made with <HeartIcon sx={{ fontSize: '1.2rem', transform: 'translateY(2px)' }}/> by
               </Typography>
               <ul className='lists'>
@@ -89,28 +110,6 @@ export function Footer() {
                   <Link color='CaptionText' underline='hover' target='_blank' rel='noreferrer'
                     href='https://github.com/GangotriBhattacharjee'>
                     Gangotri Bhattacharjee
-                  </Link>
-                </li>
-              </ul>
-            </Box>
-
-            <Box className='ListItems' sx={{
-              marginRight: 4
-            }}>
-              <Typography variant='h6'>
-                Developers
-              </Typography>
-              <ul className='lists'>
-                <li>
-                  <Link color='CaptionText' underline='hover' target='_blank' rel='noreferrer'
-                    href='https://github.com/tripathics/iocl-tracker/issues'>
-                    Report an Bug
-                  </Link>
-                </li>
-                <li>
-                  <Link color='CaptionText' underline='hover' target='_blank' rel='noreferrer'
-                    href='https://github.com/tripathics/iocl-tracker/'>
-                    Support Us
                   </Link>
                 </li>
               </ul>

@@ -20,7 +20,9 @@ tracksRoutes.route('/vehicles/:id').get((req, res) => {
     let query = { _id: ObjectId(req.params.id) };
 
     vehicles.findOne(query)
-      .then(result => { res.json(result) })
+      .then(result => { 
+        res.json(result.pos) 
+      })
       .catch(err => {
         throw err;
       });

@@ -1,8 +1,38 @@
-import { React, useState } from "react"
+import { React, useEffect, useState } from "react"
 import { Box, Container } from "@mui/system"
-import { Divider, List, ListItemButton, ListItemText, Paper, Typography } from "@mui/material"
+import { Divider, IconButton, List, ListItemButton, ListItemText, Paper, Tooltip, Typography } from "@mui/material"
 import { useJsApiLoader, GoogleMap, Marker } from "@react-google-maps/api"
 import config from '../config/config'
+import { Refresh as RefreshIcon } from "@mui/icons-material"
+
+const VehicleMarker = ({id, position, vehicleNo, icon}) => {
+  const [pos, setPos] = useState(position);
+  
+  useEffect(() => {
+    setInterval(() => {
+      fetch(`${config.API_BASE_URL}/vehicles/${id}`)
+      .then(res => res.json())
+      .then(jsonRes =>  {
+        if (jsonRes.coords) {
+          setPos(jsonRes.coords);
+        } else {
+          console.log("Can't find vehicle with given ID"); 
+        }
+      }).catch(err => {
+        console.log(err);
+      })
+    }, 10000)
+  }, [])
+
+  return (
+    <Marker
+      position={pos}
+      icon={{ url: icon, scaledSize: new window.google.maps.Size(30, 70) }}
+      label={vehicleNo}
+      className="hello"
+    />
+  )
+}
 
 const Admin = () => {
   const [vehicles, setVehicles] = useState([]);
@@ -12,7 +42,7 @@ const Admin = () => {
     fetch(`${config.API_BASE_URL}/vehicles`)
       .then(res => res.json())
       .then((jsonResponse) => {
-        setVehicles(jsonResponse);
+        setVehicles(jsonResponse.filter(vehicle => vehicle.pos));
       })
       .catch(err => {
         console.log(err);
@@ -32,32 +62,17 @@ const Admin = () => {
   };
 
   const icons = [
-    "https://raw.githubusercontent.com/tripathics/iocl-tracker/master/client/src/media/Icons/car.png",
-    "https://raw.githubusercontent.com/tripathics/iocl-tracker/master/client/src/media/Icons/ambulence.png",
+    "https://raw.githubusercontent.com/tripathics/iocl-tracker/master/client/src/media/Icons/carImage.png",
+    "https://raw.githubusercontent.com/tripathics/iocl-tracker/master/client/src/media/Icons/ambulenceImage.png",
     "https://raw.githubusercontent.com/tripathics/iocl-tracker/master/client/src/media/Icons/truck.png",
     "https://raw.githubusercontent.com/tripathics/iocl-tracker/master/client/src/media/Icons/fireTruck.png",
     "https://raw.githubusercontent.com/tripathics/iocl-tracker/master/client/src/media/Icons/bulldozer.png"
   ]
 
-  if (!isLoaded) {
-    return <div style={{
-      width: "fit-content",
-      margin: "auto",
-      fontSize: "4rem"
-    }}>Loading...</div>
-  }
-
   return (
     <>
-      {!isLoaded ? (<div style={{
-        width: "fit-content",
-        margin: "auto",
-        fontSize: "4rem"
-      }}>Loading...</div>) : (
-        <Box sx={{
-          minHeight: "inherit",
-          position: "relative"
-        }}>
+      {!isLoaded ? (<div style={{ width: "fit-content", margin: "auto", fontSize: "4rem" }}>Loading...</div>) : (
+        <Box sx={{ minHeight: "inherit", position: "relative" }}>
           <Container maxWidth='xl' sx={{ height: 0 }}>
             <Paper elevation={5} sx={{
               top: '2rem',
@@ -66,47 +81,55 @@ const Admin = () => {
               minWidth: 350,
               zIndex: 1,
             }}>
-              <Typography variant="h5" component="h3" margin={2}>
-                Registered vehicles
-              </Typography>
+              <Box sx={{
+                margin: 2,
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}>
+                <Typography variant="h6" component="h3">
+                  Registered vehicles
+                </Typography>
+                <Tooltip title="Refresh locations">
+                  <IconButton onClick={() => { fetchVehicles() }}>
+                    <RefreshIcon />
+                  </IconButton>
+                </Tooltip>
+              </Box>
+
+              <Divider variant="fullWidth" />
 
               <List sx={{
                 overflow: "auto"
               }}>
                 {vehicles.map((vehicle, i) => (<>
-                  <ListItemButton key={`l${i}`}>
-                    <ListItemText primary={vehicle.vehicleNo}/>
+                  <ListItemButton key={`listItem${i}`}>
+                    <ListItemText primary={vehicle.vehicleNo} />
                   </ListItemButton>
-                  <Divider variant="fullWidth"/>
+                  <Divider variant="middle" />
                 </>))}
               </List>
             </Paper>
           </Container>
+
           <GoogleMap
             center={center}
             zoom={15}
-            options={{
-              streetViewControl: false,
-              mapTypeControl: false,
-              fullscreenControl: false,
-            }}
-            mapContainerStyle={{
-              // width: "100%", 
-              minHeight: "inherit"
-            }}
+            options={{ streetViewControl: false, mapTypeControl: false, fullscreenControl: false }}
+            mapContainerStyle={{ minHeight: "inherit" }}
             onLoad={map => { console.log(`Map loaded`); fetchVehicles(); }}
           >
-            {vehicles.filter(vehicle => vehicle.pos).map((vehicle, i) => (
-              <Marker key={i}
+            {vehicles.map((vehicle) => (
+              <VehicleMarker key={vehicle._id}
+                id={vehicle._id}
                 position={vehicle.pos.coords}
-                //icon={{ url: "https://raw.githubusercontent.com/tripathics/iocl-tracker/master/client/src/media/Icons/car.png", scaledSize: new window.google.maps.Size(30, 42) }} 
-                //icon={icons[0]}
-                icon={{ url: icons[1], scaledSize: new window.google.maps.Size(30, 70) }}
-                label={vehicle.driverName}
-                className="hello"
+                icon={icons[0]}
+                vehicleNo={vehicle.vehicleNo} 
               />
             ))}
           </GoogleMap>
+
         </Box>
       )}
     </>
