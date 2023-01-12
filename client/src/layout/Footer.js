@@ -19,10 +19,17 @@ export function Footer() {
           <Box sx={{
             display: 'flex',
             flexDirection: 'row',
-            justifyContent: 'space-between'
+            justifyContent: { xs: 'center', sm: 'space-between' },
           }}>
-            <Box className='organization'>
-              <Box className='LogoBox'>
+            <Box sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 1,
+            }}>
+              <Box sx={{
+                display: 'flex',
+                flexDirection: 'column',
+              }}>
                 <img style={{
                   transform: 'translateX(-9px)'
                 }} src={logoGif} alt='this is gif' className='' />
@@ -33,7 +40,9 @@ export function Footer() {
               <Box sx={{
                 display: 'flex',
                 flexDirection: 'row',
-                gap: 2
+                gap: 2,
+                width: '100%',
+                justifyContent: { xs: 'center', sm: 'flex-start' },
               }}>
                 <TwitterIcon />
                 <GitHubIcon />
@@ -41,7 +50,7 @@ export function Footer() {
               </Box>
             </Box>
 
-            <Box className='ListItems'>
+            <Box className='ListItems' sx={{ display: { md: 'block', xs: 'none' } }}>
               <Typography variant='h6'>
                 Links
               </Typography>
@@ -61,7 +70,7 @@ export function Footer() {
               </ul>
             </Box>
 
-            <Box className='ListItems'>
+            <Box className='ListItems' sx={{ display: { md: 'block', xs: 'none' } }}>
               <Typography variant='h6'>
                 Developers
               </Typography>
@@ -82,10 +91,11 @@ export function Footer() {
             </Box>
 
             <Box className='ListItems' sx={{
-              marginRight: 8
+              marginRight: 8,
+              display: { sm: 'block', xs: 'none' }
             }}>
               <Typography variant='h6'>
-                Made with <HeartIcon sx={{ fontSize: '1.2rem', transform: 'translateY(2px)' }}/> by
+                Made with <HeartIcon sx={{ fontSize: '1.2rem', transform: 'translateY(2px)' }} /> by
               </Typography>
               <ul className='lists'>
                 <li>

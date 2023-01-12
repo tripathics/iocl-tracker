@@ -19,17 +19,11 @@ const Home = ({ isUser }) => {
                         <Typography sx={{ color: '#fff', textShadow: '0px 2px 3px black' }} variant="h1" component="h1">
                             Indian Oil Corp. Ltd.
                         </Typography>
-                        <Typography variant="h4" sx={{
-                            color: 'white',
-                            margin: '2rem 0'
-                        }}>
+                        <Typography variant="h4" sx={{ color: 'white', margin: '2rem 0' }}>
                             What do we do? What don't we do
                         </Typography>
 
-                        <Box sx={{
-                            display: 'flex',
-                            gap: 4
-                        }}>
+                        <Box sx={{ display: 'flex', gap: 4 }}>
                             {!isUser ? (<>
                                 <Button size="large" color='neutral' variant="contained" LinkComponent={NavLink} to='/login'>
                                     Login
@@ -37,11 +31,9 @@ const Home = ({ isUser }) => {
                                 <Button size="large" color='neutral' variant="outlined" LinkComponent={NavLink} to='/signup'>
                                     Sign up
                                 </Button>
-                            </>) : (
-                                <Button size="large" color='neutral' variant="contained" LinkComponent={NavLink} to='/login'>
-                                    Dashboard
-                                </Button>
-                            )}
+                            </>) : (<Button size="large" color='neutral' variant="contained" LinkComponent={NavLink} to='/admin'>
+                                Dashboard
+                            </Button>)}
                         </Box>
                     </Box>
                 </Container>

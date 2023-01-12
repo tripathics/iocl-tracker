@@ -5,7 +5,7 @@ import { useJsApiLoader, GoogleMap, Marker } from "@react-google-maps/api"
 import config from '../config/config'
 import { Refresh as RefreshIcon } from "@mui/icons-material"
 
-const VehicleMarker = ({ id, position, vehicleNo, icon }) => {
+const VehicleMarker = ({ id, position, vehicleNo, icon, handleClick }) => {
   const [pos, setPos] = useState(position);
 
   useEffect(() => {
@@ -27,6 +27,7 @@ const VehicleMarker = ({ id, position, vehicleNo, icon }) => {
   return (
     <Marker
       position={pos}
+      onClick={() => { handleClick(pos) }}
       icon={{ url: icon, scaledSize: new window.google.maps.Size(30, 70) }}
       label={vehicleNo}
       className="hello"
@@ -36,6 +37,7 @@ const VehicleMarker = ({ id, position, vehicleNo, icon }) => {
 
 const Admin = () => {
   const [vehicles, setVehicles] = useState([]);
+  const [map, setMap] = useState(null);
 
   const fetchVehicles = async () => {
     console.log('Fetching vehicles...')
@@ -54,12 +56,6 @@ const Admin = () => {
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: config.GOOGLE_MAPS_API_KEY,
   })
-  const icon1 = {
-    url: "https://raw.githubusercontent.com/tripathics/iocl-tracker/master/client/src/media/Icons/car.png",
-
-    //scaledSize: GoogleMap.fontSize(30,30), //Size(30,30),
-    //anchor: new window.google.maps.Point(20,20),
-  };
 
   const icons = [
     "https://raw.githubusercontent.com/tripathics/iocl-tracker/master/client/src/media/Icons/carImage.png",
@@ -72,12 +68,14 @@ const Admin = () => {
   return (
     <Box sx={{ minHeight: "inherit", position: "relative" }}>
       <Container maxWidth='xl' sx={{ height: 0 }}>
-        <Paper elevation={5} sx={{
+        <Paper elevation={3} sx={{
           top: '2rem',
           position: 'absolute',
           height: 'calc(100% - 4rem)',
           minWidth: 350,
           zIndex: 1,
+          backdropFilter: 'blur(16px)',
+          bgcolor: '#fffc'
         }}>
           <Box sx={{
             margin: 2,
@@ -86,12 +84,12 @@ const Admin = () => {
             justifyContent: 'space-between',
             alignItems: 'center'
           }}>
-            {!isLoaded ? <Skeleton variant="rounded" height={48} sx={{ width: '100%' }} /> : (<>
+            {!isLoaded ? <Skeleton variant="rounded" animation="wave" height={48} sx={{ width: '100%' }} /> : (<>
               <Typography variant="h6" component="h3">
                 Registered vehicles
               </Typography>
               <Tooltip title="Refresh locations">
-                <IconButton onClick={() => { fetchVehicles(); }}>
+                <IconButton onClick={() => { fetchVehicles(); console.log('clicked'); }}>
                   <RefreshIcon />
                 </IconButton>
               </Tooltip>
@@ -104,12 +102,12 @@ const Admin = () => {
             overflow: "auto"
           }}>
             {!isLoaded ? (<>
-              <Skeleton variant="rectangular" height={32} sx={{mt: 2}} />
+              <Skeleton variant="text" animation="wave" height={36} sx={{ mt: 2, mx: 2 }} />
               <Divider variant="middle" />
-              <Skeleton variant="rectangular" height={32} />
+              <Skeleton variant="text" animation="wave" height={36} sx={{ mx: 2 }} />
             </>) : (<>
               {vehicles.map((vehicle, i) => (<>
-                <ListItemButton key={`listItem${i}`}>
+                <ListItemButton onClick={() => { map.panTo(vehicle.pos.coords) }} key={`listItem${i}`}>
                   <ListItemText primary={vehicle.vehicleNo} />
                 </ListItemButton>
                 <Divider variant="middle" />
@@ -119,13 +117,13 @@ const Admin = () => {
         </Paper>
       </Container>
 
-      {!isLoaded ? <Skeleton animation="wave" sx={{ height: '100%', width: '100%' }} /> : (
+      {!isLoaded ? <Skeleton component="div" variant="rectangular" sx={{ minHeight: 'inherit', width: '100%' }} /> : (
         <GoogleMap
           center={center}
-          zoom={15}
+          zoom={18}
           options={{ streetViewControl: false, mapTypeControl: false, fullscreenControl: false }}
           mapContainerStyle={{ minHeight: "inherit" }}
-          onLoad={map => { console.log(`Map loaded`); fetchVehicles(); }}
+          onLoad={map => { setMap(map); console.log(`Map loaded`); fetchVehicles(); }}
         >
           {vehicles.map((vehicle) => (
             <VehicleMarker key={vehicle._id}
@@ -133,6 +131,7 @@ const Admin = () => {
               position={vehicle.pos.coords}
               icon={icons[0]}
               vehicleNo={vehicle.vehicleNo}
+              handleClick={(pos) => { map.panTo(pos); }}
             />
           ))}
         </GoogleMap>

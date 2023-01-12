@@ -12,28 +12,27 @@ import { AccountCircle as UserIcon, Logout as LogoutIcon } from '@mui/icons-mate
 import IOCL from "../media/logo/Indian_Oil_Logo.svg"
 
 const Logo = () => (
-<Box sx={{ display: "flex", alignItems: "center" }}>
-  <Box sx={{ height: 64, mr: 1, padding: 1 }}>
-  <img src={IOCL} style={{
-    height:'100%'
-  }} alt="" />
-  </Box>
-  <Typography
-  component={NavLink} to='/' 
-    variant='h5'
-    noWrap
-    sx={{
-      mr: 2,
-      display: { xs: 'none', sm: 'flex' },
-      fontFamily: 'monospace',
-      fontWeight: 700,
-      letterSpacing: '.3rem',
-      color: 'inherit',
-      textDecoration: 'none',
-    }}>
-    IOCL
-  </Typography>
-</Box>)
+  <Box sx={{ display: "flex", alignItems: "center", textDecoration: 'none' }} component={NavLink} to='/'>
+    <Box sx={{ height: 64, mr: 1, padding: 1 }}>
+      <img src={IOCL} style={{
+        height: '100%'
+      }} alt="" />
+    </Box>
+    <Typography
+      variant='h5'
+      noWrap
+      sx={{
+        mr: 2,
+        display: { xs: 'none', sm: 'flex' },
+        fontFamily: 'monospace',
+        fontWeight: 700,
+        letterSpacing: '.3rem',
+        color: 'black',
+        textDecoration: 'none',
+      }}>
+      IOCL
+    </Typography>
+  </Box>)
 
 const NavBox = ({ display, children }) => {
   return (
@@ -79,7 +78,7 @@ function Navigation({ logoutUser, user }) {
                   disableTouchRipple
                   key={page.label}
                   sx={{
-                    color: 'grey', 
+                    color: 'grey',
                     my: 1, display: 'block',
                     '&.active': {
                       color: 'black'
@@ -99,8 +98,8 @@ function Navigation({ logoutUser, user }) {
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Profile">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt={user.name} sx={{ bgcolor: '#4191b7'}}>
-                    <UserIcon/>
+                  <Avatar alt={user.name} sx={{ bgcolor: '#4191b7' }}>
+                    <UserIcon />
                   </Avatar>
                 </IconButton>
               </Tooltip>
@@ -121,7 +120,7 @@ function Navigation({ logoutUser, user }) {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                <Box marginX={2} marginY={2} sx={{minWidth: 100}}>
+                <Box marginX={2} marginY={2} sx={{ minWidth: 100 }}>
                   <Typography textAlign='center' variant="h6">
                     {user.name}
                   </Typography>
@@ -129,7 +128,7 @@ function Navigation({ logoutUser, user }) {
                     {user.email}
                   </Typography>
                 </Box>
-                <MenuItem onClick={handleLogout} sx={{justifyContent: 'center', gap: 1}}>
+                <MenuItem onClick={handleLogout} sx={{ justifyContent: 'center', gap: 1 }}>
                   <LogoutIcon />
                   <Typography>Logout</Typography>
                 </MenuItem>
