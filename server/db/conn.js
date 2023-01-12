@@ -28,21 +28,6 @@ module.exports = {
         }
       })
       .catch(err => { throw err })
-    //   client.connect(function (err, db) {
-    //     // Verify we got a good "db" object
-    //     if (db) {
-    //       _db = db.db(dbName);
-    //       console.log(`Successfully connected to ${dbName}.`);
-    //       _db.collection('logged_in_users').createIndex({ 'createdAt': 1 }, { expireAfterSeconds: 60 * userAuthExpire })
-    //       .then(() => {console.log('Created index for users expiration')})
-    //       .catch(err => {throw err;})
-
-    //       _db.collection('logged_in_drivers').createIndex({ 'createdAt': 1 }, { expireAfterSeconds: 60 * driverAuthExpire })
-    //       .then(() => {console.log('Created index for drivers expiration')})
-    //       .catch(err => {throw err;})
-    //     }
-    //     return callback(err);
-    //   });
   },
 
   getDb: function () {

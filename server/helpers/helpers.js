@@ -136,4 +136,30 @@ const generateToken = (userLoginCollection, user, res) => {
   })
 }
 
-module.exports = { getDbCollection, findUserByToken, registerNewUser, generateToken }
+function degreesToRadians(degrees) {
+  return degrees * Math.PI / 180;
+}
+
+/** 
+ * Get distance between two earth coordinates in meters
+ * 
+ * @param {{lat: number, lng: number}} pos1 First coordinate 
+ * @param {{lat: number, lng: number}} pos2 Second coordinate
+ * @returns {number} Distance in meters
+ */
+function distanceBetCoords(pos1, pos2) {
+  var earthRadiusKm = 6371;
+
+  var dLat = degreesToRadians(pos2.lat- pos1.lat);
+  var dLon = degreesToRadians(pos2.lng- pos1.lng);
+
+  pos1.lat = degreesToRadians(pos1.lat);
+  pos2.lat = degreesToRadians(pos2.lat);
+
+  var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+          Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(pos1.lat) * Math.cos(pos2.lat); 
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+  return 1000 * earthRadiusKm * c;
+}
+
+module.exports = { getDbCollection, findUserByToken, registerNewUser, generateToken, distanceBetCoords }

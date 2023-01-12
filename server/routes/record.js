@@ -1,6 +1,6 @@
 const express = require('express');
 const tracksRoutes = express.Router();
-const { getDbCollection, registerNewUser } = require('../helpers/helpers')
+const { getDbCollection, registerNewUser, distanceBetCoords } = require('../helpers/helpers')
 
 const ObjectId = require('mongodb').ObjectId;
 
@@ -61,11 +61,28 @@ tracksRoutes.route('/vehicles/add').post((req, res) => {
 
 // This section will help you update a record by id.
 tracksRoutes.route("/update/:id").post(function (req, res) {
+  const currCoords = req.body.pos;
+  let myquery = { _id: ObjectId(req.params.id) };
+  let newvalues = { $set: { pos: req.body.pos } };
+
   getDbCollection('vehicles', (vehicle) => {
-    let myquery = { _id: ObjectId(req.params.id) };
-    let newvalues = {
-      $set: { pos: req.body.pos },
-    };
+    // compare with previous position
+    vehicle.findOne(myquery).then(result => {
+      const prevCoords = result.pos.coords;
+
+      if (!prevCoords || distanceBetCoords(currCoords, prevCoords)) {
+        /** TODO: add to paths array */
+        getDbCollection('paths', paths => {
+          paths.updateOne({vehicleId: result._id.toHexString()}, {$push : {
+            coords: currCoords
+          }}, {upsert: true})
+          .then((dbRes) => {
+            console.log(dbRes);
+          })
+          .catch(err => {throw err});
+        })
+      }
+    });
 
     vehicle.updateOne(myquery, newvalues)
       .then(result => {
@@ -76,5 +93,16 @@ tracksRoutes.route("/update/:id").post(function (req, res) {
       })
   })
 });
+
+tracksRoutes.route('/paths/:id').get(function (req, res) {
+  getDbCollection('paths', paths => {
+    paths.findOne({vehicleId: req.params.id})
+    .then(result => {
+      if (!result) res.status(404).json(result);
+      else res.status(200).json(result);
+    })
+    .catch(err => { throw err })
+  })
+})
 
 module.exports = tracksRoutes
