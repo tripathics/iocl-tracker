@@ -1,13 +1,13 @@
 import { React, useEffect, useState } from "react"
 import { Box } from "@mui/system"
 import { Skeleton } from "@mui/material"
-import { useJsApiLoader, GoogleMap, Marker } from "@react-google-maps/api"
+import { useJsApiLoader, GoogleMap, Marker, DirectionsRenderer } from "@react-google-maps/api"
 import { VehicleList } from "../components/VehicleList"
 import config from '../config/config'
 
 const VehicleMarker = ({ id, position, vehicleNo, icon, handleClick }) => {
   const [pos, setPos] = useState(position);
-  
+
   useEffect(() => {
     setInterval(() => {
       fetch(`${config.API_BASE_URL}/vehicles/${id}`)
@@ -38,6 +38,7 @@ const VehicleMarker = ({ id, position, vehicleNo, icon, handleClick }) => {
 const Admin = () => {
   const [vehicles, setVehicles] = useState([]);
   const [map, setMap] = useState(null);
+  const [currVehicleDirections, setCurrVehicleDirections] = useState([]);
 
   const fetchVehicles = async () => {
     console.log('Fetching vehicles...')
@@ -65,9 +66,13 @@ const Admin = () => {
     "https://raw.githubusercontent.com/tripathics/iocl-tracker/master/client/src/media/Icons/bulldozer.png"
   ]
 
+  const handleVehicleSelect = (path) => {
+    setCurrVehicleDirections(path);
+  }
+
   return (
     <Box sx={{ minHeight: "inherit", position: "relative" }}>
-      <VehicleList fetchVehicles={fetchVehicles} vehicles={vehicles} map={map} isLoaded={isLoaded} />
+      <VehicleList setCurrVehiclePath={handleVehicleSelect} fetchVehicles={fetchVehicles} vehicles={vehicles} map={map} isLoaded={isLoaded} />
 
       {!isLoaded ? <Skeleton component="div" variant="rectangular" sx={{ minHeight: 'inherit', width: '100%' }} /> : (
         <GoogleMap
@@ -77,14 +82,29 @@ const Admin = () => {
           mapContainerStyle={{ minHeight: "inherit" }}
           onLoad={map => { setMap(map); console.log(`Map loaded`); fetchVehicles(); }}
         >
-          {vehicles.map((vehicle) => (
-            <VehicleMarker key={vehicle._id}
-              id={vehicle._id}
-              position={vehicle.pos.coords}
-              icon={icons[0]}
-              vehicleNo={vehicle.vehicleNo}
-              handleClick={(pos) => { map.panTo(pos); }}
+          {currVehicleDirections.length === 0 && (<>
+            {vehicles.map((vehicle) => (
+              <VehicleMarker key={vehicle._id}
+                id={vehicle._id}
+                position={vehicle.pos.coords}
+                icon={icons[0]}
+                vehicleNo={vehicle.vehicleNo}
+                handleClick={(pos) => { map.panTo(pos); }}
+              />
+            ))}
+          </>)}
+
+          {currVehicleDirections.length && (
+            <Marker
+              position={currVehicleDirections[currVehicleDirections.length - 1].coords}
+              label={`${String.fromCharCode(65 + currVehicleDirections.length - 1)}`}
+              zIndex={currVehicleDirections.length - 1}
             />
+          )}
+          {currVehicleDirections.map((dir, i) => (
+            <DirectionsRenderer directions={dir} options={{
+              markerOptions: { label: `${String.fromCharCode(65 + i)}`, icon: {}, zIndex: i + 1 }
+            }} key={`directions${i}`} />
           ))}
         </GoogleMap>
       )}

@@ -1,19 +1,67 @@
-import React, { useState } from "react";
-import { Refresh as RefreshIcon, ArrowForwardIos as NextIcon } from "@mui/icons-material"
+import React, { useState, useEffect } from "react";
+import { Refresh as RefreshIcon, ArrowForwardIos as NextIcon, ArrowBackIos as PrevIcon } from "@mui/icons-material"
 import { Button, Divider, IconButton, List, ListItem, Paper, Skeleton, Tooltip, Typography } from "@mui/material"
 import { Container, Box } from "@mui/system"
+import config from "../config/config";
 
-const VehicleInfo = ({vehicle, close}) => {
-  const { vehicleNo } = vehicle;
+const VehicleInfo = ({ vehicle, close, setVehiclePath }) => {
+  const [distance, setDistance] = useState('')
+
+  const { vehicleNo, _id } = vehicle;
+
+  async function calculateRoute(path) {
+    let gmapPath = [];
+    let totalDistance = 0;
+
+    for (let i = 0, size = path.length; i < size - 1; i++) {
+      // eslint-disable-next-line no-undef
+      const directionsService = new google.maps.DirectionsService()
+      const results = await directionsService.route({
+        origin: path[i].coords,
+        destination: path[i + 1].coords,
+        // eslint-disable-next-line no-undef
+        travelMode: google.maps.TravelMode.DRIVING,
+      })
+
+      gmapPath.push(results);
+      totalDistance += results.routes[0].legs[0].distance.value;
+      if (i === size - 2) {
+        setVehiclePath(gmapPath);
+        setDistance(totalDistance);
+      };
+    };
+  }
+
+  useEffect(() => {
+    fetch(`${config.API_BASE_URL}/paths/${_id}`)
+      .then(res => res.json())
+      .then(jsonRes => {
+        if (jsonRes.paths) calculateRoute(jsonRes.paths);
+        else setDistance('Not travelled yet.')
+      })
+      .catch(err => { console.log(err) });
+  }, [])
+
 
   return (
-    <Box>
-      <Typography variant="h6">
-        {vehicleNo}
-      </Typography>
-      <Typography>Distance travelled</Typography>
-      <Typography>Distance travelled</Typography>
-      <Button onClick={() => {close()}}>Close</Button>
+    <Box sx={{margin: 2,}}>
+      <Box sx={{
+        mb: 2,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        gap: 1,
+        alignItems: 'center'
+      }}>
+        <IconButton size="small" sx={{ borderRadius: 0, paddingLeft: 1.5 }} onClick={() => { close() }}>
+          <PrevIcon fontSize="small" />
+        </IconButton>
+        <Typography fontSize={18} variant="h6">
+          {vehicleNo}
+        </Typography>
+
+      </Box>
+      <Typography>Distance travelled (in metres): {distance}</Typography>
     </Box>
   )
 }
@@ -48,11 +96,12 @@ const VehicleListItem = ({ vehicle, pan, setCurrVehicle }) => {
 }
 
 
-const VehicleList = ({ vehicles, fetchVehicles, map, isLoaded }) => {
+const VehicleList = ({ vehicles, fetchVehicles, map, isLoaded, setCurrVehiclePath }) => {
   const [currVehicle, setCurrVehicle] = useState(null);
 
   const closeInfo = () => {
     setCurrVehicle(null);
+    setCurrVehiclePath([]);
   }
 
   return (
@@ -86,7 +135,7 @@ const VehicleList = ({ vehicles, fetchVehicles, map, isLoaded }) => {
         </Box>
 
         <Divider variant="fullWidth" />
-        
+
         {!currVehicle && (
           <List sx={{ overflow: "auto" }}>
             {!isLoaded ? (<>
@@ -94,21 +143,20 @@ const VehicleList = ({ vehicles, fetchVehicles, map, isLoaded }) => {
               <Divider variant="middle" />
               <Skeleton variant="text" animation="wave" height={36} sx={{ mx: 2 }} />
             </>) : (<>
-              {vehicles.map((vehicle, i) => (<>
+              {vehicles.map((vehicle, i) => (<React.Fragment key={`vehicleList${i}`} >
                 <VehicleListItem map={map}
-                  key={`listItem${i}`}
                   vehicle={vehicle}
                   pan={(p) => map.panTo(p)}
-                  setCurrVehicle={(v) => {setCurrVehicle(v)}} 
+                  setCurrVehicle={(v) => { setCurrVehicle(v) }}
                 />
-                <Divider key={`vehicleListDivider${i}`} variant="middle" />
-              </>))}
+                <Divider variant="middle" />
+              </React.Fragment>))}
             </>)}
           </List>
         )}
 
         {currVehicle && (
-          <VehicleInfo vehicle={currVehicle} close={closeInfo} />
+          <VehicleInfo vehicle={currVehicle} close={closeInfo} setVehiclePath={setCurrVehiclePath} />
         )}
       </Paper>
     </Container>
