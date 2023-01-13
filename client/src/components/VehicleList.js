@@ -9,7 +9,8 @@ const VehicleInfo = ({ vehicle, close, setVehiclePath }) => {
 
   const { vehicleNo, _id } = vehicle;
 
-  async function calculateRoute(path) {
+  async function calculateRoute(/** @type {[]} */ path) {
+    const pins = [];
     let gmapPath = [];
     let totalDistance = 0;
 
@@ -26,7 +27,10 @@ const VehicleInfo = ({ vehicle, close, setVehiclePath }) => {
       gmapPath.push(results);
       totalDistance += results.routes[0].legs[0].distance.value;
       if (i === size - 2) {
-        setVehiclePath(gmapPath);
+        setVehiclePath({
+          gmapPath: gmapPath,
+          pins: path.map(p => p.coords)
+        });
         setDistance(totalDistance);
       };
     };
@@ -101,7 +105,7 @@ const VehicleList = ({ vehicles, fetchVehicles, map, isLoaded, setCurrVehiclePat
 
   const closeInfo = () => {
     setCurrVehicle(null);
-    setCurrVehiclePath([]);
+    setCurrVehiclePath({gmapPath: [], pins: []});
   }
 
   return (

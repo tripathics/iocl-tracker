@@ -153,11 +153,11 @@ function distanceBetCoords(pos1, pos2) {
   var dLat = degreesToRadians(pos2.lat- pos1.lat);
   var dLon = degreesToRadians(pos2.lng- pos1.lng);
 
-  pos1.lat = degreesToRadians(pos1.lat);
-  pos2.lat = degreesToRadians(pos2.lat);
+  radLat1 = degreesToRadians(pos1.lat);
+  radLat2 = degreesToRadians(pos2.lat);
 
   var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-          Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(pos1.lat) * Math.cos(pos2.lat); 
+          Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(radLat1) * Math.cos(radLat2); 
   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
   return 1000 * earthRadiusKm * c;
 }

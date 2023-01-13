@@ -39,6 +39,7 @@ const Admin = () => {
   const [vehicles, setVehicles] = useState([]);
   const [map, setMap] = useState(null);
   const [currVehicleDirections, setCurrVehicleDirections] = useState([]);
+  const [currVehiclePins, setCurrVehiclePins] = useState([]);
 
   const fetchVehicles = async () => {
     console.log('Fetching vehicles...')
@@ -67,7 +68,8 @@ const Admin = () => {
   ]
 
   const handleVehicleSelect = (path) => {
-    setCurrVehicleDirections(path);
+    setCurrVehiclePins(path.pins);
+    setCurrVehicleDirections(path.gmapPath);
   }
 
   return (
@@ -94,18 +96,17 @@ const Admin = () => {
             ))}
           </>)}
 
-          {currVehicleDirections.length && (
-            <Marker
-              position={currVehicleDirections[currVehicleDirections.length - 1].coords}
-              label={`${String.fromCharCode(65 + currVehicleDirections.length - 1)}`}
-              zIndex={currVehicleDirections.length - 1}
-            />
-          )}
-          {currVehicleDirections.map((dir, i) => (
-            <DirectionsRenderer directions={dir} options={{
-              markerOptions: { label: `${String.fromCharCode(65 + i)}`, icon: {}, zIndex: i + 1 }
-            }} key={`directions${i}`} />
-          ))}
+          {currVehiclePins && (<>
+            {currVehiclePins.map((pin, i) => (
+              <Marker position={pin} 
+              key={`currVPin${i}`} 
+              label={`${String.fromCharCode(65 + i)}`} />
+            ))}
+            {currVehicleDirections.map((dir, i) => (
+              <DirectionsRenderer directions={dir} options={{ suppressMarkers: true }} key={`directions${i}`} />
+            ))}
+          </>)}
+          
         </GoogleMap>
       )}
     </Box>
