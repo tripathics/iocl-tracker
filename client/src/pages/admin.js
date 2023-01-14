@@ -1,6 +1,6 @@
 import { React, useEffect, useState } from "react"
 import { Box } from "@mui/system"
-import { Skeleton } from "@mui/material"
+import { Skeleton, Container, Typography, Button, Grid, TextField } from "@mui/material"
 import { useJsApiLoader, GoogleMap, Marker, DirectionsRenderer } from "@react-google-maps/api"
 import { VehicleList } from "../components/VehicleList"
 import config from '../config/config'
@@ -35,7 +35,67 @@ const VehicleMarker = ({ id, position, vehicleNo, icon, handleClick }) => {
   )
 }
 
-const Admin = () => {
+const Dashboard = () => {
+  const [gmapsApiKey, setGmapsApiKey] = useState(null);
+
+  const handleApiKeySubmit = (e) => {
+    e.preventDefault();
+    const data = new FormData(e.currentTarget);
+    setGmapsApiKey(data.get('apiKey'));
+  }
+  return (
+    <>
+      {gmapsApiKey && (
+        <Admin gmapsApiKey={gmapsApiKey} />
+      )}
+
+      {!gmapsApiKey && (
+        <Container maxWidth="xs">
+          <Box
+            sx={{
+              marginTop: 4,
+              marginBottom: 2,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
+            <Typography component="h1" variant="h5">
+              Enter Google Maps API key
+            </Typography>
+
+            <Box component="form" onSubmit={handleApiKeySubmit} sx={{ mt: 3 }}>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+
+                  <TextField
+                    autoComplete="Google Maps API key"
+                    name="apiKey"
+                    required
+                    fullWidth
+                    id="apiKey"
+                    label="Google Maps API key"
+                    autoFocus
+                  />
+                </Grid>
+              </Grid>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Submit
+              </Button>
+            </Box>
+          </Box>
+        </Container>
+      )}
+    </>
+  )
+}
+
+const Admin = ({gmapsApiKey}) => {
   const [vehicles, setVehicles] = useState([]);
   const [map, setMap] = useState(null);
   const [currVehicleDirections, setCurrVehicleDirections] = useState([]);
@@ -56,7 +116,7 @@ const Admin = () => {
   const center = { lat: 26.182808644471546, lng: 91.80385223005672 }
 
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: config.GOOGLE_MAPS_API_KEY,
+    googleMapsApiKey: gmapsApiKey,
   })
 
   const icons = [
@@ -98,19 +158,19 @@ const Admin = () => {
 
           {currVehiclePins && (<>
             {currVehiclePins.map((pin, i) => (
-              <Marker position={pin} 
-              key={`currVPin${i}`} 
-              label={`${String.fromCharCode(65 + i)}`} />
+              <Marker position={pin}
+                key={`currVPin${i}`}
+                label={`${String.fromCharCode(65 + i)}`} />
             ))}
             {currVehicleDirections.map((dir, i) => (
               <DirectionsRenderer directions={dir} options={{ suppressMarkers: true }} key={`directions${i}`} />
             ))}
           </>)}
-          
+
         </GoogleMap>
       )}
     </Box>
   )
 }
 
-export default Admin
+export default Dashboard
