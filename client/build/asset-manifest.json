@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/static/css/main.6091a7a5.css",
+    "main.js": "/static/js/main.19c6d5dd.js",
+    "static/media/iocl-refinary.jpg": "/static/media/iocl-refinary.258453dd13caf5d2de3e.jpg",
+    "static/media/logo2.png": "/static/media/logo2.cfcbd4d6c29fd419bef7.png",
+    "static/media/logo.gif": "/static/media/logo.662b3357968fa7703f9b.gif",
+    "static/media/Indian_Oil_Logo.svg": "/static/media/Indian_Oil_Logo.b026927152a008371d5e0185b5758868.svg",
+    "index.html": "/index.html",
+    "main.6091a7a5.css.map": "/static/css/main.6091a7a5.css.map",
+    "main.19c6d5dd.js.map": "/static/js/main.19c6d5dd.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.6091a7a5.css",
+    "static/js/main.19c6d5dd.js"
+  ]
+}
