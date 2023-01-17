@@ -11,9 +11,10 @@
 WINTER INTERNSHIP PROJECT ON
 </p>
 
-## “IOCL VEHICLE MANAGEMENT SYSTEM”
+## “IOCL VEHICLE MANAGEMENT SYSTEM (ADMIN)”
 
 </div>
+
 
 ### DEVELOPED BY
 #### Pursottam Sah & Chandrashekhar Tripathi 
@@ -22,6 +23,14 @@ B. Tech. in Computer Science and Eng.
 <br>
 National Institute of Technology, Arunachal Pradesh</p>
 
+#### Shashank Kashyap Sharma
+<p> 
+Kaziranga University (Assam)</p>
+
+#### Miss Gangortri Bhattacharji
+<p> 
+Sikkam Manipal Institute of Technology.</p>
+
 ### UNDER THE GUIDANCE OF
 
 #### Mr. Sumiron Changkakoti
@@ -29,6 +38,18 @@ National Institute of Technology, Arunachal Pradesh</p>
 Senior Manager, Information System 
 <br>
 Indian Oil Corporation Limited, Guwahati </p>
+
+LinkedIn: [Link](https://www.linkedin.com/in/sumiron-changkakoti-7b836925/)
+
+## &
+
+#### Mr. Arjun Singh Banra
+<p> 
+Assistant Manager, Information System 
+<br>
+Indian Oil Corporation Limited, Guwahati </p>
+
+LinkedIn: [Link](https://www.linkedin.com/in/arjun-singh-banra-68132619/)
 
 
 ## Project Overview 
@@ -143,13 +164,22 @@ Step 14: After Sucessfully adding that details inside the driver app you will be
 ![image](./media/admin-vehicle.jpeg)
 
 
-## If you click on the number plate It will show routes
+### If you click on the number plate It will show routes
 
 ![image](./media/vehicle-routes.jpeg)
 
 
+## Future Works
+
+1. Geofencing 
+2. Overspeeding notification to the driver
+3. Emergency Button for help and support 
+4. Fuel Informatoin 
+
 
 #### Please Give a star if you love to read 
+
+
 
 
 
